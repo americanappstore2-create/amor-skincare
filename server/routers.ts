@@ -5,6 +5,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { invokeLLM } from "./_core/llm";
+import { storagePut } from "./storage";
 import { notifyOwner } from "./_core/notification";
 import {
   getAllProducts,
@@ -206,6 +207,36 @@ export const appRouter = router({
       .mutation(async ({ input }) => {
         await updateOrderStatus(input.id, input.status);
         return { success: true };
+      }),
+  }),
+
+  admin: router({
+    stats: adminProcedure.query(async () => {
+      const allProducts = await getAllProducts();
+      const allOrders = await getAllOrders();
+      const totalRevenue = allOrders
+        .filter((o) => o.status !== "cancelled")
+        .reduce((sum, o) => sum + parseFloat(o.totalAmount as string), 0);
+      const newOrders = allOrders.filter((o) => o.status === "new").length;
+      return {
+        totalProducts: allProducts.length,
+        totalOrders: allOrders.length,
+        newOrders,
+        totalRevenue,
+      };
+    }),
+
+    uploadImage: adminProcedure
+      .input(z.object({
+        base64: z.string(),
+        filename: z.string(),
+        mimeType: z.string().default("image/jpeg"),
+      }))
+      .mutation(async ({ input }) => {
+        const buffer = Buffer.from(input.base64, "base64");
+        const key = `products/${Date.now()}-${input.filename}`;
+        const { url } = await storagePut(key, buffer, input.mimeType);
+        return { url };
       }),
   }),
 

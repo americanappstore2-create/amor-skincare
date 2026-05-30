@@ -60,3 +60,16 @@
 - [x] Scroll-triggered fade-in animations on all sections
 - [x] Updated Navbar with real logo and WhatsApp quick link
 - [x] All 7 tests passing
+
+## Full Admin Panel (Round 4)
+- [ ] Admin: dashboard stats (total orders, revenue, products count)
+- [ ] Admin: product list with search and edit/delete actions
+- [ ] Admin: add product form (name, price, description, brand, category, skin type, image upload)
+- [ ] Admin: edit existing product
+- [ ] Admin: delete product with confirmation
+- [ ] Admin: add/edit/delete categories
+- [ ] Admin: image upload from computer/phone to S3 storage
+- [ ] Admin: view and manage orders with status updates
+- [ ] Backend: product create/update/delete procedures (admin-only)
+- [ ] Backend: category create/update/delete procedures (admin-only)
+- [ ] Backend: file upload endpoint for product images
