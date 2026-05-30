@@ -93,8 +93,8 @@ export default function Checkout() {
     <div className="pt-20 md:pt-24 pb-16" style={{ background: "oklch(0.99 0.005 10)" }}>
       <div className="container max-w-4xl">
         <div className="mb-8 pt-4">
-          <span className="text-xs tracking-[0.2em] uppercase font-medium text-primary">Оформление</span>
-          <h1 className="font-display text-3xl md:text-4xl font-light mt-1">Ваш заказ</h1>
+          <span className="text-eyebrow text-primary">Оформление</span>
+          <h1 className="font-display mt-1" style={{ fontSize: "clamp(1.6rem, 4vw, 2.4rem)", fontWeight: 400, lineHeight: 1.15 }}>Ваш заказ</h1>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -104,13 +104,13 @@ export default function Checkout() {
 
               {/* Contact */}
               <div className="bg-white rounded-2xl p-6 border border-rose-100/60 shadow-sm">
-                <h2 className="font-display text-lg font-semibold mb-5 flex items-center gap-2">
+                <h2 className="font-sans mb-5 flex items-center gap-2" style={{ fontSize: "0.95rem", fontWeight: 600 }}>
                   <User className="h-4 w-4 text-primary" />
                   Контактные данные
                 </h2>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-xs font-medium tracking-wide uppercase text-muted-foreground mb-2">Ваше имя *</label>
+                    <label className="block font-sans text-muted-foreground mb-2" style={{ fontSize: "0.75rem", fontWeight: 500, letterSpacing: "0.06em", textTransform: "uppercase" }}>Ваше имя *</label>
                     <input
                       type="text"
                       placeholder="Например: Айгерим"
@@ -123,7 +123,7 @@ export default function Checkout() {
                     {errors.customerName && <p className="text-red-500 text-xs mt-1">{errors.customerName}</p>}
                   </div>
                   <div>
-                    <label className="block text-xs font-medium tracking-wide uppercase text-muted-foreground mb-2">Номер телефона *</label>
+                    <label className="block font-sans text-muted-foreground mb-2" style={{ fontSize: "0.75rem", fontWeight: 500, letterSpacing: "0.06em", textTransform: "uppercase" }}>Номер телефона *</label>
                     <div className="relative">
                       <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <input

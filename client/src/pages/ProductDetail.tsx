@@ -111,11 +111,11 @@ export default function ProductDetail() {
                 <span className="px-3 py-1 rounded-full text-xs font-medium bg-rose-100 text-primary">
                   {categoryLabels[product.category] ?? product.category}
                 </span>
-                <span className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+                <span className="font-sans text-muted-foreground uppercase" style={{ fontSize: "0.68rem", fontWeight: 600, letterSpacing: "0.12em" }}>
                   {product.brand}
                 </span>
               </div>
-              <h1 className="font-display text-2xl md:text-3xl font-bold text-foreground leading-tight">
+              <h1 className="font-display text-foreground" style={{ fontSize: "clamp(1.5rem, 3.5vw, 2rem)", fontWeight: 500, lineHeight: 1.2 }}>
                 {product.name}
               </h1>
             </div>
@@ -129,7 +129,7 @@ export default function ProductDetail() {
             </div>
 
             {/* Price */}
-            <div className="text-3xl font-bold gradient-text">
+            <div className="font-display gradient-text" style={{ fontSize: "clamp(1.6rem, 4vw, 2.2rem)", fontWeight: 500 }}>
               {parseFloat(product.price).toLocaleString("ru-KZ")} ₸
             </div>
 

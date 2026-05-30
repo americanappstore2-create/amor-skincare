@@ -39,8 +39,8 @@ export default function Catalog() {
       <div className="container">
         {/* Header */}
         <div className="text-center mb-10">
-          <h1 className="font-display text-4xl md:text-5xl font-bold gradient-text mb-3">Каталог</h1>
-          <p className="text-muted-foreground">Премиальная корейская и европейская косметика</p>
+          <h1 className="font-display gradient-text mb-3" style={{ fontSize: "clamp(2rem, 5vw, 3rem)", fontWeight: 400, lineHeight: 1.15 }}>Каталог</h1>
+          <p className="font-sans text-muted-foreground" style={{ fontSize: "0.9rem" }}>Премиальная корейская и европейская косметика</p>
         </div>
 
         {/* Search */}

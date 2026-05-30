@@ -30,9 +30,9 @@ export default function Cart() {
   return (
     <div className="pt-20 md:pt-24 pb-16">
       <div className="container max-w-4xl">
-        <h1 className="font-display text-3xl md:text-4xl font-bold gradient-text mb-8">
+        <h1 className="font-display gradient-text mb-8" style={{ fontSize: "clamp(1.8rem, 4vw, 2.5rem)", fontWeight: 400, lineHeight: 1.15 }}>
           Корзина
-          <span className="text-lg text-muted-foreground font-normal ml-3">({totalItems} товаров)</span>
+          <span className="font-sans text-muted-foreground ml-3" style={{ fontSize: "1rem", fontWeight: 400 }}>({totalItems} товаров)</span>
         </h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

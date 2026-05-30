@@ -50,15 +50,15 @@ export default function Navbar() {
               <img
                 src={LOGO_URL}
                 alt="Amor Skincare"
-                className="h-11 w-11 md:h-13 md:w-13 object-contain rounded-full transition-transform duration-300 group-hover:scale-105 relative z-10"
-                style={{ height: "48px", width: "48px" }}
+                className="rounded-full transition-transform duration-300 group-hover:scale-105 relative z-10"
+                style={{ height: "44px", width: "44px", objectFit: "contain", background: "white" }}
               />
             </div>
             <div className="hidden sm:flex flex-col leading-none">
-              <span className="font-display text-2xl font-semibold tracking-wide gradient-text-dark" style={{ lineHeight: 1.1 }}>
+              <span className="font-display gradient-text-dark" style={{ fontSize: "1.4rem", fontWeight: 500, letterSpacing: "0.08em", lineHeight: 1.1 }}>
                 AMOR
               </span>
-              <span className="text-[11px] tracking-[0.18em] uppercase text-muted-foreground font-light" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              <span className="font-sans text-muted-foreground" style={{ fontSize: "0.62rem", letterSpacing: "0.18em", textTransform: "uppercase", fontWeight: 400 }}>
                 skin care
               </span>
             </div>

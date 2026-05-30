@@ -110,29 +110,28 @@ export default function Home() {
                 <img
                   src={LOGO_URL}
                   alt="Amor Skincare Logo"
-                  className="relative h-20 w-20 md:h-24 md:w-24 rounded-full object-cover border-2 shadow-2xl"
-                  style={{ borderColor: "oklch(0.52 0.20 12 / 0.6)" }}
+                  className="relative rounded-full shadow-2xl border-2"
+                  style={{ height: "88px", width: "88px", objectFit: "contain", background: "white", borderColor: "oklch(0.52 0.20 12 / 0.5)" }}
                 />
               </div>
               <div>
-                <h1 className="font-display text-5xl md:text-7xl font-light tracking-wider text-white leading-none">
+                <h1 className="font-display text-white leading-none" style={{ fontSize: "clamp(2.8rem, 9vw, 5.5rem)", fontWeight: 400, letterSpacing: "0.10em" }}>
                   AMOR
                 </h1>
-                <p className="text-sm md:text-base tracking-[0.3em] uppercase font-light mt-1"
-                  style={{ color: "oklch(0.88 0.08 10)" }}>
+                <p className="font-sans uppercase mt-1" style={{ fontSize: "clamp(0.65rem, 1.5vw, 0.8rem)", letterSpacing: "0.22em", fontWeight: 400, color: "oklch(0.88 0.08 10)" }}>
                   skin care
                 </p>
               </div>
             </div>
 
             {/* Tagline */}
-            <p className="font-display text-2xl md:text-3xl font-light italic mb-4 animate-fade-in-up delay-200"
-              style={{ color: "oklch(0.90 0.06 10)" }}>
+            <p className="font-display italic mb-4 animate-fade-in-up delay-200"
+              style={{ fontSize: "clamp(1.3rem, 3.5vw, 2rem)", fontWeight: 400, lineHeight: 1.35, color: "oklch(0.90 0.06 10)" }}>
               "Твой premium skincare space."
             </p>
 
-            <p className="text-sm md:text-base leading-relaxed mb-8 animate-fade-in-up delay-300"
-              style={{ color: "oklch(0.75 0.04 10)" }}>
+            <p className="font-sans leading-relaxed mb-8 animate-fade-in-up delay-300"
+              style={{ fontSize: "clamp(0.875rem, 2vw, 1rem)", color: "oklch(0.72 0.04 10)" }}>
               Откройте для себя лучшие бренды корейской и европейской косметики.<br />
               Профессиональный подбор ухода для вашей кожи.
             </p>
@@ -201,8 +200,8 @@ export default function Home() {
                 style={{ transitionDelay: `${i * 100}ms` }}
               >
                 <div className="text-3xl mb-1">{f.icon}</div>
-                <div className="font-display text-base font-semibold">{f.title}</div>
-                <div className="text-xs text-muted-foreground">{f.desc}</div>
+                <div className="font-sans text-sm font-600 text-foreground" style={{ fontWeight: 600 }}>{f.title}</div>
+                <div className="font-sans text-xs text-muted-foreground leading-snug">{f.desc}</div>
               </div>
             ))}
           </div>
@@ -214,11 +213,11 @@ export default function Home() {
         style={{ background: "linear-gradient(180deg, white 0%, oklch(0.98 0.012 10) 100%)" }}>
         <div className="container">
           <div className={`text-center mb-14 transition-all duration-700 ${productsSection.inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <span className="text-xs tracking-[0.25em] uppercase font-medium text-primary mb-3 block">Наши товары</span>
-            <h2 className="font-display text-4xl md:text-5xl font-light mb-4">
+            <span className="text-eyebrow text-primary mb-3 block">Наши товары</span>
+            <h2 className="font-display mb-4" style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)", fontWeight: 400, lineHeight: 1.15 }}>
               Популярные средства
             </h2>
-            <p className="text-muted-foreground text-sm max-w-md mx-auto">
+            <p className="font-sans text-muted-foreground max-w-md mx-auto" style={{ fontSize: "0.9rem" }}>
               Тщательно отобранные продукты для вашей идеальной рутины ухода
             </p>
           </div>
@@ -255,7 +254,7 @@ export default function Home() {
       <section ref={brandsSection.ref} className="py-14 overflow-hidden border-y border-rose-100/50"
         style={{ background: "linear-gradient(135deg, oklch(0.98 0.015 10), oklch(0.96 0.02 10))" }}>
         <div className="container mb-8 text-center">
-          <span className="text-xs tracking-[0.25em] uppercase font-medium text-primary">Наши бренды</span>
+          <span className="text-eyebrow text-primary">Наши бренды</span>
         </div>
         <div className="relative">
           {/* Fade edges */}
@@ -268,7 +267,7 @@ export default function Home() {
             animation: "marquee 20s linear infinite",
           }}>
             {[...BRANDS, ...BRANDS, ...BRANDS].map((brand, i) => (
-              <span key={i} className="font-display text-xl md:text-2xl font-light tracking-widest text-foreground/40 hover:text-primary transition-colors duration-300 cursor-default px-4">
+              <span key={i} className="font-display text-foreground/35 hover:text-primary transition-colors duration-300 cursor-default px-4" style={{ fontSize: "clamp(1.1rem, 2.5vw, 1.5rem)", fontWeight: 400, letterSpacing: "0.12em" }}>
                 {brand}
               </span>
             ))}
@@ -292,8 +291,8 @@ export default function Home() {
 
         <div className="container relative z-10">
           <div className={`text-center mb-14 transition-all duration-700 ${storeSection.inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <span className="text-xs tracking-[0.25em] uppercase font-medium text-primary mb-3 block">Где нас найти</span>
-            <h2 className="font-display text-4xl md:text-5xl font-light mb-4">Наши магазины</h2>
+            <span className="text-eyebrow text-primary mb-3 block">Где нас найти</span>
+            <h2 className="font-display mb-4" style={{ fontSize: "clamp(1.8rem, 4vw, 2.8rem)", fontWeight: 400, lineHeight: 1.15 }}>Наши магазины</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
@@ -304,7 +303,7 @@ export default function Home() {
                 style={{ background: "linear-gradient(135deg, oklch(0.52 0.20 12 / 0.12), oklch(0.52 0.20 12 / 0.05))" }}>
                 🏬
               </div>
-              <h3 className="font-display text-lg font-semibold mb-1">Уральск</h3>
+              <h3 className="font-display mb-1" style={{ fontSize: "1.2rem", fontWeight: 500 }}>Уральск</h3>
               <p className="text-sm text-muted-foreground flex items-center gap-1.5">
                 <MapPin className="h-3.5 w-3.5 text-primary shrink-0" />
                 ТРЦ Атриум
@@ -318,7 +317,7 @@ export default function Home() {
                 style={{ background: "linear-gradient(135deg, oklch(0.52 0.20 12 / 0.12), oklch(0.52 0.20 12 / 0.05))" }}>
                 🏬
               </div>
-              <h3 className="font-display text-lg font-semibold mb-1">Аксай</h3>
+              <h3 className="font-display mb-1" style={{ fontSize: "1.2rem", fontWeight: 500 }}>Аксай</h3>
               <p className="text-sm text-muted-foreground flex items-center gap-1.5">
                 <MapPin className="h-3.5 w-3.5 text-primary shrink-0" />
                 Asia Plaza
