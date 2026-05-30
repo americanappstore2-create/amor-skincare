@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Bot, Loader2, Phone } from "lucide-react";
+import { MessageCircle, X, Send, Bot, Loader2, Sparkles } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+
+const LOGO_URL = "/manus-storage/amor-logo_5919afc4.jpg";
 
 interface Message {
   role: "user" | "assistant";
@@ -86,27 +88,19 @@ export default function AIChatWidget() {
             {/* Header */}
             <div
               className="px-4 py-3 flex items-center gap-3"
-              style={{ background: "linear-gradient(135deg, oklch(0.58 0.18 10), oklch(0.72 0.14 10))" }}
+              style={{ background: "linear-gradient(135deg, oklch(0.52 0.20 12), oklch(0.42 0.18 12))" }}
             >
-              <div className="h-9 w-9 rounded-full bg-white/20 flex items-center justify-center">
-                <Bot className="h-5 w-5 text-white" />
+              <div className="relative">
+                <img src={LOGO_URL} alt="Amor" className="h-9 w-9 rounded-full object-cover border-2 border-white/30" />
+                <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-green-400 border-2 border-white" />
               </div>
               <div className="flex-1">
-                <div className="text-white font-semibold text-sm">Amor AI Помощник</div>
-                <div className="text-white/70 text-xs flex items-center gap-1">
-                  <div className="h-1.5 w-1.5 rounded-full bg-green-400" />
-                  Онлайн
+                <div className="text-white font-semibold text-sm flex items-center gap-1">
+                  Amor Skincare
+                  <Sparkles className="h-3 w-3 text-white/70" />
                 </div>
+                <div className="text-white/70 text-xs">AI-помощник • Онлайн</div>
               </div>
-              <a
-                href="https://wa.me/7774779779"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors"
-                title="WhatsApp"
-              >
-                <Phone className="h-4 w-4 text-white" />
-              </a>
               <button
                 onClick={() => setIsOpen(false)}
                 className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors"
@@ -123,9 +117,7 @@ export default function AIChatWidget() {
                   className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"} animate-fade-in`}
                 >
                   {msg.role === "assistant" && (
-                    <div className="h-7 w-7 rounded-full bg-rose-100 flex items-center justify-center mr-2 shrink-0 mt-0.5">
-                      <Bot className="h-4 w-4 text-primary" />
-                    </div>
+                    <img src={LOGO_URL} alt="" className="h-7 w-7 rounded-full object-cover mr-2 shrink-0 mt-0.5 border border-rose-100" />
                   )}
                   <div
                     className={`max-w-[80%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed ${
@@ -142,9 +134,7 @@ export default function AIChatWidget() {
               {/* Typing indicator */}
               {isTyping && (
                 <div className="flex justify-start animate-fade-in">
-                  <div className="h-7 w-7 rounded-full bg-rose-100 flex items-center justify-center mr-2 shrink-0">
-                    <Bot className="h-4 w-4 text-primary" />
-                  </div>
+                  <img src={LOGO_URL} alt="" className="h-7 w-7 rounded-full object-cover mr-2 shrink-0 border border-rose-100" />
                   <div className="chat-bubble-ai px-4 py-3 rounded-2xl rounded-bl-sm">
                     <div className="flex gap-1">
                       <div className="h-2 w-2 rounded-full bg-primary/40 animate-bounce" style={{ animationDelay: "0ms" }} />
@@ -207,7 +197,8 @@ export default function AIChatWidget() {
       {/* FAB button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="chat-fab fixed bottom-6 right-4 md:right-6 z-50 h-14 w-14 rounded-full flex items-center justify-center text-white"
+        className="fixed bottom-6 right-4 md:right-6 z-50 h-14 w-14 rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-110 active:scale-95"
+        style={{ background: isOpen ? "oklch(0.45 0.18 12)" : "linear-gradient(135deg, oklch(0.52 0.20 12), oklch(0.62 0.18 15))", boxShadow: "0 8px 32px oklch(0.52 0.20 12 / 0.4)" }}
         aria-label="Открыть чат"
       >
         {isOpen ? (

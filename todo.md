@@ -46,3 +46,17 @@
 - [x] Send WhatsApp message to manager (+7 777 477 9779) on new order with full order details
 - [x] Show delivery method in admin panel order details
 - [x] Update order schema to store delivery method (delivery/pickup) and pickup location
+
+## Redesign (Round 3)
+- [x] Upload and use real Amor Skincare logo from Instagram
+- [x] Animated dark hero with skincare background image and floating emojis
+- [x] Modern premium product cards with hover lift and wishlist button
+- [x] Simplified payment options: Kaspi / Наличные
+- [x] Auto-open WhatsApp with prefilled order text for manager
+- [x] In-app owner notification on new order
+- [x] Updated AI chat widget with real logo and brand colors
+- [x] Dark premium footer with real logo and social links
+- [x] Brand marquee animation section
+- [x] Scroll-triggered fade-in animations on all sections
+- [x] Updated Navbar with real logo and WhatsApp quick link
+- [x] All 7 tests passing

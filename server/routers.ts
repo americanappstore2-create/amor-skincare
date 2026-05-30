@@ -19,7 +19,7 @@ import {
   updateOrderStatus,
 } from "./db";
 
-const MANAGER_WHATSAPP = "77774779779"; // Manager's WhatsApp number (no +)
+const MANAGER_WHATSAPP = "77774779779";
 
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
   if (ctx.user.role !== "admin") {
@@ -115,6 +115,7 @@ export const appRouter = router({
           deliveryMethod: z.enum(["delivery", "pickup"]).default("delivery"),
           deliveryAddress: z.string().optional(),
           pickupLocation: z.string().optional(),
+          // Simplified payment: kaspi or cash
           paymentMethod: z.enum(["kaspi_red", "cash"]),
           items: z.array(
             z.object({
@@ -129,6 +130,7 @@ export const appRouter = router({
         })
       )
       .mutation(async ({ input }) => {
+        // Save order to DB
         const order = await createOrder({
           customerName: input.customerName,
           customerPhone: input.customerPhone,
@@ -141,29 +143,44 @@ export const appRouter = router({
           notes: input.notes,
         } as any);
 
-        // Build order summary text
+        const orderId = order?.id ?? "—";
+
+        // Build human-readable message
         const itemsList = input.items
           .map((i) => `• ${i.name} × ${i.quantity} — ${(i.price * i.quantity).toLocaleString("ru-KZ")} ₸`)
           .join("\n");
 
         const deliveryInfo = input.deliveryMethod === "pickup"
-          ? `Самовывоз: ${input.pickupLocation ?? "не указано"}`
-          : `Доставка по адресу: ${input.deliveryAddress ?? "не указано"}`;
+          ? `📍 Самовывоз: ${input.pickupLocation ?? "не указано"}`
+          : `🚚 Доставка: ${input.deliveryAddress ?? "не указано"}`;
 
-        const paymentLabel = input.paymentMethod === "kaspi_red" ? "Kaspi Red" : "Наличные";
+        // Payment label — simplified
+        const paymentLabel = input.paymentMethod === "kaspi_red" ? "Kaspi" : "Наличные";
 
-        const orderText = `🛍️ *НОВЫЙ ЗАКАЗ #${order?.id ?? ""}*\n\n👤 *Клиент:* ${input.customerName}\n📞 *Телефон:* ${input.customerPhone}\n📦 *${deliveryInfo}*\n💳 *Оплата:* ${paymentLabel}\n\n*Товары:*\n${itemsList}\n\n💰 *Итого: ${input.totalAmount.toLocaleString("ru-KZ")} ₸*${input.notes ? `\n\n📝 Примечание: ${input.notes}` : ""}`;
+        const orderText =
+          `🛍️ *НОВЫЙ ЗАКАЗ #${orderId}*\n\n` +
+          `👤 *Клиент:* ${input.customerName}\n` +
+          `📞 *Телефон:* ${input.customerPhone}\n` +
+          `${deliveryInfo}\n` +
+          `💳 *Оплата:* ${paymentLabel}\n\n` +
+          `*Состав заказа:*\n${itemsList}\n\n` +
+          `💰 *Итого: ${input.totalAmount.toLocaleString("ru-KZ")} ₸*` +
+          (input.notes ? `\n\n📝 *Примечание:* ${input.notes}` : "");
 
-        // Notify owner via in-app notification
+        // 1. In-app notification to owner (admin panel)
         await notifyOwner({
-          title: `🛍️ Новый заказ от ${input.customerName}`,
+          title: `🛍️ Новый заказ #${orderId} от ${input.customerName}`,
           content: orderText,
-        }).catch(() => {}); // Don't block order creation if notification fails
+        }).catch(() => {});
+
+        // 2. WhatsApp deep-link for manager (opens prefilled message)
+        const whatsappUrl = `https://wa.me/${MANAGER_WHATSAPP}?text=${encodeURIComponent(orderText)}`;
 
         return {
           success: true,
-          orderId: order?.id,
-          whatsappUrl: `https://wa.me/${MANAGER_WHATSAPP}?text=${encodeURIComponent(orderText)}`,
+          orderId,
+          whatsappUrl,
+          orderText,
         };
       }),
 
@@ -211,23 +228,16 @@ export const appRouter = router({
 - Название: Amor Skincare
 - Слоган: "Твой premium skincare space"
 - Локации: Уральск — ТРЦ Атриум; Аксай — Asia Plaza
-- WhatsApp: wa.me/7774779779 (номер: +7 777 477 97 79)
+- WhatsApp: +7 777 477 97 79
 - Режим работы: Пн-Вс 10:00–21:00
-- Оплата: Kaspi Red, наличные
+- Оплата: Kaspi, наличные
 - Доставка: курьерская доставка по городу или самовывоз из магазина
 
-Бренды в магазине: Rorobell, Unleashia, rom&nd, JUST, VT, Davines, Biodance, Ederra lab, Angiopharm, Axis Y, La Sultan, Embrace, Genosys.
+Бренды: Rorobell, Unleashia, rom&nd, JUST, VT, Davines, Biodance, Ederra lab, Angiopharm, Axis Y, La Sultan, Embrace, Genosys.
 
-Категории товаров: сыворотки, кремы, тонеры, маски, очищающие средства, уход за глазами, солнцезащитные кремы.
+Категории: сыворотки, кремы, тонеры, маски, очищающие средства, уход за глазами, солнцезащитные кремы.
 
-Ты помогаешь клиентам:
-1. Подобрать подходящие средства для их типа кожи и проблем
-2. Ответить на вопросы о составах и применении
-3. Рассказать о брендах и их особенностях
-4. Предоставить информацию о магазине, доставке и оплате
-5. Помочь с составлением рутины ухода за кожей
-
-Отвечай на русском языке. Будь дружелюбным, профессиональным и полезным. Давай конкретные рекомендации. Если клиент спрашивает о конкретном товаре или хочет сделать заказ, направь его в каталог или предложи написать в WhatsApp.`;
+Отвечай на русском языке. Будь дружелюбным и профессиональным. Давай конкретные рекомендации по уходу за кожей.`;
 
         const response = await invokeLLM({
           messages: [
@@ -237,7 +247,9 @@ export const appRouter = router({
         });
 
         const rawContent = response.choices[0]?.message?.content;
-        const content = typeof rawContent === 'string' ? rawContent : "Извините, не могу ответить прямо сейчас. Пожалуйста, напишите нам в WhatsApp: wa.me/7774779779";
+        const content = typeof rawContent === "string"
+          ? rawContent
+          : "Извините, не могу ответить прямо сейчас. Напишите нам в WhatsApp: +7 777 477 97 79";
         return { content };
       }),
   }),

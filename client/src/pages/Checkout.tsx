@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import { User, Phone, MapPin, CreditCard, Banknote, CheckCircle, Store, Truck } from "lucide-react";
+import { User, Phone, MapPin, CreditCard, Banknote, CheckCircle, Store, Truck, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { useCart } from "../contexts/CartContext";
@@ -28,7 +28,7 @@ export default function Checkout() {
   const createOrder = trpc.orders.create.useMutation({
     onSuccess: (data) => {
       clearCart();
-      // Open WhatsApp with order details for manager notification
+      // Auto-open WhatsApp with prefilled order message for manager
       if (data.whatsappUrl) {
         window.open(data.whatsappUrl, "_blank");
       }
@@ -77,11 +77,11 @@ export default function Checkout() {
 
   if (items.length === 0) {
     return (
-      <div className="pt-24 pb-16 text-center">
+      <div className="pt-28 pb-16 text-center">
         <div className="text-5xl mb-4">🛍️</div>
         <h2 className="font-display text-2xl font-bold mb-2">Корзина пуста</h2>
         <Link href="/catalog">
-          <Button className="rounded-full mt-4" style={{ background: "linear-gradient(135deg, oklch(0.58 0.18 10), oklch(0.72 0.14 10))" }}>
+          <Button className="rounded-full mt-4" style={{ background: "linear-gradient(135deg, oklch(0.52 0.20 12), oklch(0.62 0.18 15))" }}>
             Перейти в каталог
           </Button>
         </Link>
@@ -90,48 +90,49 @@ export default function Checkout() {
   }
 
   return (
-    <div className="pt-20 md:pt-24 pb-16">
+    <div className="pt-20 md:pt-24 pb-16" style={{ background: "oklch(0.99 0.005 10)" }}>
       <div className="container max-w-4xl">
-        <h1 className="font-display text-3xl md:text-4xl font-bold gradient-text mb-8">
-          Оформление заказа
-        </h1>
+        <div className="mb-8 pt-4">
+          <span className="text-xs tracking-[0.2em] uppercase font-medium text-primary">Оформление</span>
+          <h1 className="font-display text-3xl md:text-4xl font-light mt-1">Ваш заказ</h1>
+        </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Form fields */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-5">
 
               {/* Contact */}
-              <div className="bg-white rounded-2xl p-6 border border-rose-100">
+              <div className="bg-white rounded-2xl p-6 border border-rose-100/60 shadow-sm">
                 <h2 className="font-display text-lg font-semibold mb-5 flex items-center gap-2">
-                  <User className="h-5 w-5 text-primary" />
+                  <User className="h-4 w-4 text-primary" />
                   Контактные данные
                 </h2>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-1.5">Ваше имя *</label>
+                    <label className="block text-xs font-medium tracking-wide uppercase text-muted-foreground mb-2">Ваше имя *</label>
                     <input
                       type="text"
-                      placeholder="Введите ваше имя"
+                      placeholder="Например: Айгерим"
                       value={form.customerName}
                       onChange={(e) => setForm({ ...form, customerName: e.target.value })}
                       className={`w-full px-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/20 ${
-                        errors.customerName ? "border-red-300 bg-red-50" : "border-rose-200"
+                        errors.customerName ? "border-red-300 bg-red-50" : "border-rose-200/70 focus:border-primary/40"
                       }`}
                     />
                     {errors.customerName && <p className="text-red-500 text-xs mt-1">{errors.customerName}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1.5">Номер телефона *</label>
+                    <label className="block text-xs font-medium tracking-wide uppercase text-muted-foreground mb-2">Номер телефона *</label>
                     <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <input
                         type="tel"
                         placeholder="+7 777 000 00 00"
                         value={form.customerPhone}
                         onChange={(e) => setForm({ ...form, customerPhone: e.target.value })}
                         className={`w-full pl-10 pr-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/20 ${
-                          errors.customerPhone ? "border-red-300 bg-red-50" : "border-rose-200"
+                          errors.customerPhone ? "border-red-300 bg-red-50" : "border-rose-200/70 focus:border-primary/40"
                         }`}
                       />
                     </div>
@@ -141,13 +142,12 @@ export default function Checkout() {
               </div>
 
               {/* Delivery method */}
-              <div className="bg-white rounded-2xl p-6 border border-rose-100">
+              <div className="bg-white rounded-2xl p-6 border border-rose-100/60 shadow-sm">
                 <h2 className="font-display text-lg font-semibold mb-5 flex items-center gap-2">
-                  <MapPin className="h-5 w-5 text-primary" />
+                  <MapPin className="h-4 w-4 text-primary" />
                   Способ получения
                 </h2>
 
-                {/* Method toggle */}
                 <div className="grid grid-cols-2 gap-3 mb-5">
                   {[
                     { value: "delivery", label: "Доставка", desc: "Курьером по городу", icon: <Truck className="h-5 w-5" /> },
@@ -159,7 +159,7 @@ export default function Checkout() {
                       onClick={() => setForm({ ...form, deliveryMethod: method.value as "delivery" | "pickup" })}
                       className={`relative p-4 rounded-xl border-2 text-left transition-all duration-200 ${
                         form.deliveryMethod === method.value
-                          ? "border-primary bg-rose-50"
+                          ? "border-primary bg-rose-50/70"
                           : "border-rose-100 hover:border-rose-300"
                       }`}
                     >
@@ -175,27 +175,25 @@ export default function Checkout() {
                   ))}
                 </div>
 
-                {/* Delivery address */}
                 {form.deliveryMethod === "delivery" && (
-                  <div className="animate-fade-in">
-                    <label className="block text-sm font-medium mb-1.5">Адрес доставки *</label>
+                  <div>
+                    <label className="block text-xs font-medium tracking-wide uppercase text-muted-foreground mb-2">Адрес доставки *</label>
                     <textarea
                       placeholder="Город, улица, дом, квартира"
                       value={form.deliveryAddress}
                       onChange={(e) => setForm({ ...form, deliveryAddress: e.target.value })}
                       rows={3}
                       className={`w-full px-4 py-3 rounded-xl border text-sm transition-all resize-none focus:outline-none focus:ring-2 focus:ring-primary/20 ${
-                        errors.deliveryAddress ? "border-red-300 bg-red-50" : "border-rose-200"
+                        errors.deliveryAddress ? "border-red-300 bg-red-50" : "border-rose-200/70 focus:border-primary/40"
                       }`}
                     />
                     {errors.deliveryAddress && <p className="text-red-500 text-xs mt-1">{errors.deliveryAddress}</p>}
                   </div>
                 )}
 
-                {/* Pickup location */}
                 {form.deliveryMethod === "pickup" && (
-                  <div className="animate-fade-in">
-                    <label className="block text-sm font-medium mb-2">Выберите магазин</label>
+                  <div>
+                    <label className="block text-xs font-medium tracking-wide uppercase text-muted-foreground mb-2">Выберите магазин</label>
                     <div className="space-y-2">
                       {PICKUP_LOCATIONS.map((loc) => (
                         <button
@@ -204,11 +202,11 @@ export default function Checkout() {
                           onClick={() => setForm({ ...form, pickupLocation: loc.value })}
                           className={`w-full flex items-center gap-3 p-3.5 rounded-xl border-2 text-left transition-all duration-200 ${
                             form.pickupLocation === loc.value
-                              ? "border-primary bg-rose-50"
+                              ? "border-primary bg-rose-50/70"
                               : "border-rose-100 hover:border-rose-300"
                           }`}
                         >
-                          <Store className={`h-5 w-5 shrink-0 ${form.pickupLocation === loc.value ? "text-primary" : "text-muted-foreground"}`} />
+                          <Store className={`h-4 w-4 shrink-0 ${form.pickupLocation === loc.value ? "text-primary" : "text-muted-foreground"}`} />
                           <span className="text-sm font-medium">{loc.label}</span>
                           {form.pickupLocation === loc.value && (
                             <CheckCircle className="h-4 w-4 text-primary ml-auto" />
@@ -216,22 +214,20 @@ export default function Checkout() {
                         </button>
                       ))}
                     </div>
-                    <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
-                      <span>🕐</span> Режим работы: Пн–Вс 10:00–21:00
-                    </p>
+                    <p className="text-xs text-muted-foreground mt-2">🕐 Режим работы: Пн–Вс 10:00–21:00</p>
                   </div>
                 )}
               </div>
 
-              {/* Payment */}
-              <div className="bg-white rounded-2xl p-6 border border-rose-100">
+              {/* Payment — simplified: Kaspi or Cash */}
+              <div className="bg-white rounded-2xl p-6 border border-rose-100/60 shadow-sm">
                 <h2 className="font-display text-lg font-semibold mb-5 flex items-center gap-2">
-                  <CreditCard className="h-5 w-5 text-primary" />
+                  <CreditCard className="h-4 w-4 text-primary" />
                   Способ оплаты
                 </h2>
                 <div className="grid grid-cols-2 gap-3">
                   {[
-                    { value: "kaspi_red", label: "Kaspi Red", desc: "Рассрочка без %%", icon: <CreditCard className="h-5 w-5" /> },
+                    { value: "kaspi_red", label: "Kaspi", desc: "Kaspi Pay / Kaspi Red", icon: <CreditCard className="h-5 w-5" /> },
                     { value: "cash", label: "Наличные", desc: "При получении", icon: <Banknote className="h-5 w-5" /> },
                   ].map((method) => (
                     <button
@@ -240,7 +236,7 @@ export default function Checkout() {
                       onClick={() => setForm({ ...form, paymentMethod: method.value as "kaspi_red" | "cash" })}
                       className={`relative p-4 rounded-xl border-2 text-left transition-all duration-200 ${
                         form.paymentMethod === method.value
-                          ? "border-primary bg-rose-50"
+                          ? "border-primary bg-rose-50/70"
                           : "border-rose-100 hover:border-rose-300"
                       }`}
                     >
@@ -258,30 +254,30 @@ export default function Checkout() {
               </div>
 
               {/* Notes */}
-              <div className="bg-white rounded-2xl p-6 border border-rose-100">
-                <h2 className="font-display text-base font-semibold mb-3">Комментарий к заказу</h2>
+              <div className="bg-white rounded-2xl p-6 border border-rose-100/60 shadow-sm">
+                <h2 className="font-display text-base font-semibold mb-3">Комментарий</h2>
                 <textarea
                   placeholder="Дополнительные пожелания..."
                   value={form.notes}
                   onChange={(e) => setForm({ ...form, notes: e.target.value })}
                   rows={2}
-                  className="w-full px-4 py-3 rounded-xl border border-rose-200 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  className="w-full px-4 py-3 rounded-xl border border-rose-200/70 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
               </div>
             </div>
 
             {/* Order summary */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-2xl p-6 border border-rose-100 sticky top-24">
-                <h2 className="font-display text-lg font-semibold mb-4">Ваш заказ</h2>
-                <div className="space-y-3 mb-4 max-h-60 overflow-y-auto">
+              <div className="bg-white rounded-2xl p-6 border border-rose-100/60 shadow-sm sticky top-24">
+                <h2 className="font-display text-lg font-semibold mb-4">Итого</h2>
+                <div className="space-y-3 mb-4 max-h-52 overflow-y-auto pr-1">
                   {items.map((item) => (
                     <div key={item.productId} className="flex gap-3 items-start">
-                      <div className="h-10 w-10 rounded-lg overflow-hidden bg-rose-50 shrink-0">
+                      <div className="h-10 w-10 rounded-lg overflow-hidden bg-rose-50 shrink-0 border border-rose-100">
                         {item.imageUrl ? (
                           <img src={item.imageUrl} alt={item.name} className="h-full w-full object-cover" />
                         ) : (
-                          <div className="h-full w-full flex items-center justify-center text-sm">🌸</div>
+                          <div className="h-full w-full flex items-center justify-center text-base">🌸</div>
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -295,56 +291,50 @@ export default function Checkout() {
                   ))}
                 </div>
 
-                {/* Delivery summary */}
-                <div className="bg-rose-50 rounded-xl p-3 mb-4 text-xs">
-                  <div className="flex items-center gap-1.5 font-medium text-foreground/80">
-                    {form.deliveryMethod === "pickup" ? (
-                      <><Store className="h-3.5 w-3.5 text-primary" /> Самовывоз</>
-                    ) : (
-                      <><Truck className="h-3.5 w-3.5 text-primary" /> Доставка</>
-                    )}
-                  </div>
-                  {form.deliveryMethod === "pickup" && (
-                    <div className="text-muted-foreground mt-0.5">
-                      {PICKUP_LOCATIONS.find((l) => l.value === form.pickupLocation)?.label}
-                    </div>
-                  )}
+                {/* Delivery badge */}
+                <div className="rounded-xl p-3 mb-4 text-xs flex items-center gap-2"
+                  style={{ background: "oklch(0.96 0.02 10)" }}>
+                  {form.deliveryMethod === "pickup"
+                    ? <><Store className="h-3.5 w-3.5 text-primary" /> <span className="font-medium">Самовывоз: </span>{PICKUP_LOCATIONS.find(l => l.value === form.pickupLocation)?.label}</>
+                    : <><Truck className="h-3.5 w-3.5 text-primary" /> <span className="font-medium">Доставка</span></>
+                  }
                 </div>
 
                 <div className="border-t border-rose-100 pt-4 mb-5">
                   <div className="flex justify-between items-center">
-                    <span className="font-semibold">Итого</span>
-                    <span className="font-bold text-xl gradient-text">
+                    <span className="text-sm font-medium text-muted-foreground">Сумма заказа</span>
+                    <span className="font-display text-2xl font-semibold gradient-text-dark">
                       {totalAmount.toLocaleString("ru-KZ")} ₸
                     </span>
                   </div>
                 </div>
 
-                <Button
+                <button
                   type="submit"
-                  size="lg"
-                  className="w-full rounded-full font-medium shadow-lg hover:shadow-xl transition-all"
                   disabled={createOrder.isPending}
-                  style={{ background: "linear-gradient(135deg, oklch(0.58 0.18 10), oklch(0.72 0.14 10))" }}
+                  className="btn-amor w-full flex items-center justify-center gap-2 text-sm"
                 >
                   {createOrder.isPending ? (
-                    <span className="flex items-center gap-2">
+                    <>
                       <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                       Оформляем...
-                    </span>
+                    </>
                   ) : (
-                    "Подтвердить заказ"
+                    <>
+                      <Send className="h-4 w-4" />
+                      Подтвердить заказ
+                    </>
                   )}
-                </Button>
+                </button>
 
-                <p className="text-xs text-muted-foreground text-center mt-3">
-                  После подтверждения откроется WhatsApp для связи с менеджером
+                <p className="text-[11px] text-muted-foreground text-center mt-3 leading-relaxed">
+                  После подтверждения откроется WhatsApp — менеджер получит ваш заказ автоматически
                 </p>
 
                 <Link href="/cart">
-                  <Button variant="ghost" className="w-full mt-2 text-sm text-muted-foreground">
+                  <button type="button" className="w-full mt-3 py-2 text-xs text-muted-foreground hover:text-foreground transition-colors text-center">
                     ← Вернуться в корзину
-                  </Button>
+                  </button>
                 </Link>
               </div>
             </div>

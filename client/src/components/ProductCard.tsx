@@ -1,6 +1,6 @@
+import { useState } from "react";
 import { Link } from "wouter";
-import { ShoppingCart, Eye } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ShoppingCart, Heart } from "lucide-react";
 import { useCart } from "../contexts/CartContext";
 import { toast } from "sonner";
 
@@ -25,17 +25,31 @@ const categoryLabels: Record<string, string> = {
   toner: "Тонер",
   mask: "Маска",
   cleanser: "Очищение",
-  eye_care: "Уход за глазами",
+  eye_care: "Глаза",
   sunscreen: "Санскрин",
   other: "Другое",
 };
 
+const categoryEmojis: Record<string, string> = {
+  serum: "💧",
+  cream: "🫙",
+  toner: "🌊",
+  mask: "🌿",
+  cleanser: "✨",
+  eye_care: "👁️",
+  sunscreen: "☀️",
+  other: "🌸",
+};
+
 export default function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart();
+  const [liked, setLiked] = useState(false);
+  const [addingToCart, setAddingToCart] = useState(false);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    setAddingToCart(true);
     addItem({
       productId: product.id,
       name: product.name,
@@ -43,61 +57,116 @@ export default function ProductCard({ product }: ProductCardProps) {
       imageUrl: product.imageUrl ?? undefined,
       brand: product.brand,
     });
-    toast.success(`${product.name} добавлен в корзину`, {
-      description: `${parseFloat(product.price).toLocaleString("ru-KZ")} ₸`,
+    toast.success(`${product.name}`, {
+      description: `Добавлено в корзину • ${parseFloat(product.price).toLocaleString("ru-KZ")} ₸`,
     });
+    setTimeout(() => setAddingToCart(false), 600);
+  };
+
+  const handleLike = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setLiked(!liked);
   };
 
   return (
     <Link href={`/product/${product.id}`}>
-      <div className="product-card group bg-white rounded-2xl overflow-hidden border border-rose-100 cursor-pointer h-full flex flex-col">
+      <div className="group relative bg-white rounded-2xl overflow-hidden cursor-pointer h-full flex flex-col transition-all duration-350"
+        style={{
+          border: "1px solid oklch(0.93 0.02 10)",
+          boxShadow: "0 2px 12px oklch(0.52 0.20 12 / 0.04)",
+        }}
+        onMouseEnter={(e) => {
+          (e.currentTarget as HTMLDivElement).style.transform = "translateY(-6px)";
+          (e.currentTarget as HTMLDivElement).style.boxShadow = "0 16px 48px oklch(0.52 0.20 12 / 0.14)";
+          (e.currentTarget as HTMLDivElement).style.borderColor = "oklch(0.52 0.20 12 / 0.25)";
+        }}
+        onMouseLeave={(e) => {
+          (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
+          (e.currentTarget as HTMLDivElement).style.boxShadow = "0 2px 12px oklch(0.52 0.20 12 / 0.04)";
+          (e.currentTarget as HTMLDivElement).style.borderColor = "oklch(0.93 0.02 10)";
+        }}
+      >
         {/* Image */}
-        <div className="relative overflow-hidden aspect-product bg-rose-50">
+        <div className="relative overflow-hidden bg-gradient-to-br from-rose-50 to-pink-50/50"
+          style={{ aspectRatio: "1 / 1" }}>
           {product.imageUrl ? (
             <img
               src={product.imageUrl}
               alt={product.name}
-              className="product-image w-full h-full object-cover"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-108"
+              style={{ transition: "transform 0.5s cubic-bezier(0.23, 1, 0.32, 1)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.08)")}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <div className="text-4xl">🌸</div>
+            <div className="w-full h-full flex flex-col items-center justify-center gap-2">
+              <div className="text-5xl">{categoryEmojis[product.category] ?? "🌸"}</div>
+              <div className="text-xs text-muted-foreground font-medium">{product.brand}</div>
             </div>
           )}
+
           {/* Category badge */}
-          <div className="absolute top-2 left-2">
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-white/90 text-primary border border-primary/20">
+          <div className="absolute top-2.5 left-2.5">
+            <span className="px-2.5 py-1 rounded-full text-[10px] font-medium tracking-wide"
+              style={{
+                background: "rgba(255,255,255,0.92)",
+                backdropFilter: "blur(8px)",
+                border: "1px solid oklch(0.52 0.20 12 / 0.2)",
+                color: "oklch(0.52 0.20 12)",
+              }}>
               {categoryLabels[product.category] ?? product.category}
             </span>
           </div>
-          {/* Quick view overlay */}
-          <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-            <div className="bg-white/90 rounded-full p-2">
-              <Eye className="h-4 w-4 text-primary" />
+
+          {/* Wishlist */}
+          <button
+            onClick={handleLike}
+            className="absolute top-2.5 right-2.5 h-7 w-7 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-90"
+            style={{
+              background: liked ? "oklch(0.52 0.20 12)" : "rgba(255,255,255,0.85)",
+              backdropFilter: "blur(8px)",
+            }}
+          >
+            <Heart className={`h-3.5 w-3.5 transition-all ${liked ? "text-white fill-white" : "text-rose-400"}`} />
+          </button>
+
+          {/* Out of stock */}
+          {product.inStock === 0 && (
+            <div className="absolute inset-0 bg-white/70 backdrop-blur-sm flex items-center justify-center">
+              <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500">Нет в наличии</span>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Info */}
-        <div className="p-3 flex flex-col flex-1">
-          <div className="text-[11px] text-muted-foreground font-medium uppercase tracking-wide mb-1">
+        <div className="p-3.5 flex flex-col flex-1">
+          <div className="text-[10px] font-semibold tracking-[0.12em] uppercase mb-1"
+            style={{ color: "oklch(0.65 0.10 12)" }}>
             {product.brand}
           </div>
-          <h3 className="text-sm font-semibold text-foreground leading-tight mb-2 flex-1 line-clamp-2">
+          <h3 className="text-sm font-medium text-foreground leading-snug mb-3 flex-1 line-clamp-2">
             {product.name}
           </h3>
           <div className="flex items-center justify-between mt-auto">
-            <div className="font-bold text-primary text-base">
+            <div className="font-display text-lg font-semibold"
+              style={{ color: "oklch(0.35 0.18 12)" }}>
               {parseFloat(product.price).toLocaleString("ru-KZ")} ₸
             </div>
-            <Button
-              size="sm"
+            <button
               onClick={handleAddToCart}
-              className="h-8 w-8 p-0 rounded-full shadow-sm hover:shadow-md transition-all"
-              style={{ background: "linear-gradient(135deg, oklch(0.58 0.18 10), oklch(0.72 0.14 10))" }}
+              disabled={product.inStock === 0}
+              className="h-9 w-9 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-90 disabled:opacity-40"
+              style={{
+                background: addingToCart
+                  ? "oklch(0.62 0.14 12)"
+                  : "linear-gradient(135deg, oklch(0.52 0.20 12), oklch(0.62 0.18 15))",
+                boxShadow: "0 4px 14px oklch(0.52 0.20 12 / 0.3)",
+                transform: addingToCart ? "scale(0.9)" : "scale(1)",
+              }}
             >
-              <ShoppingCart className="h-3.5 w-3.5" />
-            </Button>
+              <ShoppingCart className="h-4 w-4 text-white" />
+            </button>
           </div>
         </div>
       </div>
