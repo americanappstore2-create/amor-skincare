@@ -30,16 +30,7 @@ const categoryLabels: Record<string, string> = {
   other: "Другое",
 };
 
-const categoryEmojis: Record<string, string> = {
-  serum: "💧",
-  cream: "🫙",
-  toner: "🌊",
-  mask: "🌿",
-  cleanser: "✨",
-  eye_care: "👁️",
-  sunscreen: "☀️",
-  other: "🌸",
-};
+
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart();
@@ -71,49 +62,46 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Link href={`/product/${product.id}`}>
-      <div className="group relative bg-white rounded-2xl overflow-hidden cursor-pointer h-full flex flex-col transition-all duration-350"
+      <div className="group relative bg-white overflow-hidden cursor-pointer h-full flex flex-col transition-all duration-400"
         style={{
-          border: "1px solid oklch(0.93 0.02 10)",
-          boxShadow: "0 2px 12px oklch(0.52 0.20 12 / 0.04)",
+          border: "1px solid #e8e0d8",
+          transitionTimingFunction: "cubic-bezier(0.23,1,0.32,1)",
         }}
         onMouseEnter={(e) => {
-          (e.currentTarget as HTMLDivElement).style.transform = "translateY(-6px)";
-          (e.currentTarget as HTMLDivElement).style.boxShadow = "0 16px 48px oklch(0.52 0.20 12 / 0.14)";
-          (e.currentTarget as HTMLDivElement).style.borderColor = "oklch(0.52 0.20 12 / 0.25)";
+          (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px)";
+          (e.currentTarget as HTMLDivElement).style.boxShadow = "0 20px 50px rgba(0,0,0,0.08)";
+          (e.currentTarget as HTMLDivElement).style.borderColor = "#c9a96e";
         }}
         onMouseLeave={(e) => {
           (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
-          (e.currentTarget as HTMLDivElement).style.boxShadow = "0 2px 12px oklch(0.52 0.20 12 / 0.04)";
-          (e.currentTarget as HTMLDivElement).style.borderColor = "oklch(0.93 0.02 10)";
+          (e.currentTarget as HTMLDivElement).style.boxShadow = "none";
+          (e.currentTarget as HTMLDivElement).style.borderColor = "#e8e0d8";
         }}
       >
         {/* Image */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-rose-50 to-pink-50/50"
-          style={{ aspectRatio: "1 / 1" }}>
+        <div           className="relative overflow-hidden bg-[#faf7f4]"
+          style={{ aspectRatio: "3 / 4" }}>
           {product.imageUrl ? (
             <img
               src={product.imageUrl}
               alt={product.name}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-108"
-              style={{ transition: "transform 0.5s cubic-bezier(0.23, 1, 0.32, 1)" }}
-              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.08)")}
-              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+              className="w-full h-full object-cover"
+              style={{ transition: "transform 0.7s cubic-bezier(0.23, 1, 0.32, 1)" }}
             />
           ) : (
-            <div className="w-full h-full flex flex-col items-center justify-center gap-2">
-              <div className="text-5xl">{categoryEmojis[product.category] ?? "🌸"}</div>
-              <div className="text-xs text-muted-foreground font-medium">{product.brand}</div>
+            <div className="w-full h-full flex flex-col items-center justify-center gap-2 px-4 text-center">
+              <p className="text-[9px] tracking-[0.2em] uppercase text-[#c9a96e] font-medium">{product.brand}</p>
+              <p className="font-serif text-sm text-[#888] font-light leading-snug">{product.name}</p>
             </div>
           )}
 
           {/* Category badge */}
-          <div className="absolute top-2.5 left-2.5">
-            <span className="px-2.5 py-1 rounded-full text-[10px] font-medium tracking-wide"
+          <div className="absolute top-3 left-3">
+            <span className="px-2 py-0.5 text-[9px] tracking-[0.15em] uppercase font-medium"
               style={{
-                background: "rgba(255,255,255,0.92)",
-                backdropFilter: "blur(8px)",
-                border: "1px solid oklch(0.52 0.20 12 / 0.2)",
-                color: "oklch(0.52 0.20 12)",
+                background: "rgba(255,255,255,0.95)",
+                color: "#1a1a1a",
+                border: "1px solid #e8e0d8",
               }}>
               {categoryLabels[product.category] ?? product.category}
             </span>
@@ -122,48 +110,45 @@ export default function ProductCard({ product }: ProductCardProps) {
           {/* Wishlist */}
           <button
             onClick={handleLike}
-            className="absolute top-2.5 right-2.5 h-7 w-7 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-90"
+            className="absolute top-3 right-3 h-7 w-7 flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-90"
             style={{
-              background: liked ? "oklch(0.52 0.20 12)" : "rgba(255,255,255,0.85)",
-              backdropFilter: "blur(8px)",
+              background: liked ? "#1a1a1a" : "rgba(255,255,255,0.9)",
+              border: "1px solid #e8e0d8",
             }}
           >
-            <Heart className={`h-3.5 w-3.5 transition-all ${liked ? "text-white fill-white" : "text-rose-400"}`} />
+            <Heart className={`h-3 w-3 transition-all ${liked ? "text-white fill-white" : "text-[#888]"}`} />
           </button>
 
           {/* Out of stock */}
           {product.inStock === 0 && (
-            <div className="absolute inset-0 bg-white/70 backdrop-blur-sm flex items-center justify-center">
-              <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500">Нет в наличии</span>
+            <div className="absolute inset-0 bg-white/75 flex items-center justify-center">
+              <span className="text-[10px] tracking-[0.2em] uppercase text-[#888] font-medium">Нет в наличии</span>
             </div>
           )}
         </div>
 
         {/* Info */}
-        <div className="p-3.5 flex flex-col flex-1">
-          <div className="font-sans uppercase mb-1" style={{ fontSize: "0.62rem", fontWeight: 600, letterSpacing: "0.12em", color: "oklch(0.62 0.10 12)" }}>
+        <div className="p-3 flex flex-col flex-1">
+          <p className="text-[9px] tracking-[0.2em] uppercase font-medium mb-1" style={{ color: "#c9a96e" }}>
             {product.brand}
-          </div>
-          <h3 className="font-sans text-foreground leading-snug mb-3 flex-1 line-clamp-2" style={{ fontSize: "0.82rem", fontWeight: 500, lineHeight: 1.4 }}>
+          </p>
+          <h3 className="font-serif font-light text-[#1a1a1a] leading-snug mb-2.5 flex-1 line-clamp-2 group-hover:text-[#c9a96e] transition-colors duration-200" style={{ fontSize: "0.9rem" }}>
             {product.name}
           </h3>
           <div className="flex items-center justify-between mt-auto">
-            <div className="font-display" style={{ fontSize: "1.05rem", fontWeight: 500, color: "oklch(0.35 0.18 12)" }}>
+            <span className="text-[13px] font-medium text-[#1a1a1a] tracking-wide">
               {parseFloat(product.price).toLocaleString("ru-KZ")} ₸
-            </div>
+            </span>
             <button
               onClick={handleAddToCart}
               disabled={product.inStock === 0}
-              className="h-9 w-9 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-90 disabled:opacity-40"
+              className="h-8 w-8 flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-40"
               style={{
-                background: addingToCart
-                  ? "oklch(0.62 0.14 12)"
-                  : "linear-gradient(135deg, oklch(0.52 0.20 12), oklch(0.62 0.18 15))",
-                boxShadow: "0 4px 14px oklch(0.52 0.20 12 / 0.3)",
-                transform: addingToCart ? "scale(0.9)" : "scale(1)",
+                background: addingToCart ? "#c9a96e" : "#1a1a1a",
+                color: "white",
               }}
             >
-              <ShoppingCart className="h-4 w-4 text-white" />
+              <ShoppingCart className="h-3.5 w-3.5" />
             </button>
           </div>
         </div>

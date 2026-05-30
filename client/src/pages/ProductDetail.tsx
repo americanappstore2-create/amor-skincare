@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "wouter";
-import { ArrowLeft, ShoppingCart, Plus, Minus, Star, Package } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowLeft, Plus, Minus, Check } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useCart } from "../contexts/CartContext";
 import { toast } from "sonner";
@@ -22,6 +21,7 @@ export default function ProductDetail() {
   const productId = parseInt(id ?? "0");
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<"description" | "ingredients" | "usage">("description");
+  const [added, setAdded] = useState(false);
   const { addItem } = useCart();
 
   const { data: product, isLoading, error } = trpc.products.get.useQuery({ id: productId });
@@ -41,22 +41,24 @@ export default function ProductDetail() {
         brand: product.brand,
       });
     }
-    toast.success(`${product.name} добавлен в корзину (${quantity} шт.)`, {
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000);
+    toast.success(`${product.name} добавлен в корзину`, {
       description: `${(parseFloat(product.price) * quantity).toLocaleString("ru-KZ")} ₸`,
     });
   };
 
   if (isLoading) {
     return (
-      <div className="pt-24 pb-16">
-        <div className="container max-w-4xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            <div className="skeleton aspect-square rounded-3xl" />
-            <div className="space-y-4">
-              <div className="skeleton h-6 rounded w-1/3" />
-              <div className="skeleton h-8 rounded w-2/3" />
-              <div className="skeleton h-10 rounded w-1/4" />
-              <div className="skeleton h-24 rounded" />
+      <div className="pt-24 pb-16 bg-white min-h-screen">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+            <div className="skeleton aspect-square" />
+            <div className="space-y-6 pt-4">
+              <div className="skeleton h-4 w-1/4" />
+              <div className="skeleton h-8 w-3/4" />
+              <div className="skeleton h-10 w-1/3" />
+              <div className="skeleton h-24 w-full" />
             </div>
           </div>
         </div>
@@ -66,32 +68,38 @@ export default function ProductDetail() {
 
   if (error || !product) {
     return (
-      <div className="pt-24 pb-16 text-center">
-        <div className="text-5xl mb-4">😔</div>
-        <h2 className="font-display text-2xl font-bold mb-2">Товар не найден</h2>
+      <div className="pt-24 pb-16 bg-white min-h-screen text-center">
+        <p className="text-[10px] tracking-[0.35em] uppercase text-[#c9a96e] mb-3 font-medium">Ошибка</p>
+        <h2 className="font-serif text-2xl font-light text-[#1a1a1a] mb-6">Товар не найден</h2>
         <Link href="/catalog">
-          <Button variant="outline" className="rounded-full mt-4">← Вернуться в каталог</Button>
+          <button className="inline-flex items-center gap-2 border border-[#1a1a1a] text-[#1a1a1a] px-8 py-3 text-[11px] tracking-[0.2em] uppercase font-medium hover:bg-[#1a1a1a] hover:text-white transition-all duration-300">
+            <ArrowLeft className="w-3.5 h-3.5" />
+            Вернуться в каталог
+          </button>
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="pt-20 md:pt-24 pb-16">
-      <div className="container max-w-5xl">
+    <div className="pt-20 md:pt-24 pb-16 bg-white min-h-screen">
+      <div className="max-w-5xl mx-auto px-6">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
-          <Link href="/" className="hover:text-primary transition-colors">Главная</Link>
-          <span>/</span>
-          <Link href="/catalog" className="hover:text-primary transition-colors">Каталог</Link>
-          <span>/</span>
-          <span className="text-foreground truncate max-w-[200px]">{product.name}</span>
+        <div className="flex items-center gap-2 text-[11px] tracking-wide text-[#888] font-light py-6 border-b border-[#e8e0d8] mb-10">
+          <Link href="/" className="hover:text-[#1a1a1a] transition-colors">Главная</Link>
+          <span className="text-[#ccc]">/</span>
+          <Link href="/catalog" className="hover:text-[#1a1a1a] transition-colors">Каталог</Link>
+          <span className="text-[#ccc]">/</span>
+          <span className="text-[#1a1a1a] truncate max-w-[200px]">{product.name}</span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-20">
           {/* Image */}
           <div className="animate-scale-in">
-            <div className="aspect-square rounded-3xl overflow-hidden bg-rose-50 border border-rose-100">
+            <div
+              className="aspect-square overflow-hidden bg-[#faf7f4]"
+              style={{ border: "1px solid #e8e0d8" }}
+            >
               {product.imageUrl ? (
                 <img
                   src={product.imageUrl}
@@ -99,107 +107,132 @@ export default function ProductDetail() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-6xl">🌸</div>
+                <div className="w-full h-full flex items-center justify-center">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#c9a96e" strokeWidth="0.8" className="w-20 h-20 opacity-30">
+                    <rect x="3" y="3" width="18" height="18" rx="1"/>
+                    <path d="M3 9h18M9 21V9"/>
+                  </svg>
+                </div>
               )}
             </div>
+
+            {/* Back link */}
+            <Link href="/catalog">
+              <button className="mt-5 flex items-center gap-2 text-[11px] tracking-[0.15em] uppercase text-[#888] font-light hover:text-[#1a1a1a] transition-colors duration-200">
+                <ArrowLeft className="w-3.5 h-3.5" />
+                Назад в каталог
+              </button>
+            </Link>
           </div>
 
           {/* Info */}
-          <div className="animate-fade-in-up space-y-5">
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <span className="px-3 py-1 rounded-full text-xs font-medium bg-rose-100 text-primary">
-                  {categoryLabels[product.category] ?? product.category}
-                </span>
-                <span className="font-sans text-muted-foreground uppercase" style={{ fontSize: "0.68rem", fontWeight: 600, letterSpacing: "0.12em" }}>
-                  {product.brand}
-                </span>
-              </div>
-              <h1 className="font-display text-foreground" style={{ fontSize: "clamp(1.5rem, 3.5vw, 2rem)", fontWeight: 500, lineHeight: 1.2 }}>
-                {product.name}
-              </h1>
+          <div className="animate-fade-in-up space-y-6">
+            {/* Brand + Category */}
+            <div className="flex items-center gap-3">
+              <p className="text-[10px] tracking-[0.3em] uppercase text-[#c9a96e] font-medium">{product.brand}</p>
+              <span className="text-[#e8e0d8]">|</span>
+              <p className="text-[10px] tracking-[0.2em] uppercase text-[#888] font-light">
+                {categoryLabels[product.category] ?? product.category}
+              </p>
             </div>
 
-            {/* Rating placeholder */}
-            <div className="flex items-center gap-1">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <Star key={s} className="h-4 w-4 text-amber-400 fill-amber-400" />
-              ))}
-              <span className="text-sm text-muted-foreground ml-1">(5.0)</span>
-            </div>
+            {/* Name */}
+            <h1 className="font-serif text-2xl md:text-3xl font-light text-[#1a1a1a] tracking-wide leading-snug">
+              {product.name}
+            </h1>
+
+            {/* Divider */}
+            <div className="w-10 h-px bg-[#c9a96e]" />
 
             {/* Price */}
-            <div className="font-display gradient-text" style={{ fontSize: "clamp(1.6rem, 4vw, 2.2rem)", fontWeight: 500 }}>
-              {parseFloat(product.price).toLocaleString("ru-KZ")} ₸
+            <div>
+              <p className="font-serif text-3xl font-light text-[#1a1a1a]">
+                {parseFloat(product.price).toLocaleString("ru-KZ")} ₸
+              </p>
+              {quantity > 1 && (
+                <p className="text-[12px] text-[#888] font-light mt-1">
+                  Итого: {(parseFloat(product.price) * quantity).toLocaleString("ru-KZ")} ₸
+                </p>
+              )}
             </div>
 
             {/* Stock */}
-            <div className="flex items-center gap-2 text-sm">
-              <Package className="h-4 w-4 text-green-500" />
-              <span className="text-green-600 font-medium">
+            <div className="flex items-center gap-2">
+              <div className={`w-2 h-2 rounded-full ${product.inStock ? "bg-[#4ade80]" : "bg-[#f87171]"}`} />
+              <p className="text-[11px] tracking-[0.1em] uppercase font-medium text-[#888]">
                 {product.inStock ? "В наличии" : "Нет в наличии"}
-              </span>
+              </p>
             </div>
 
             {/* Quantity */}
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 bg-rose-50 rounded-full p-1">
+              <p className="text-[11px] tracking-[0.15em] uppercase text-[#888] font-light">Количество</p>
+              <div className="flex items-center" style={{ border: "1px solid #e8e0d8" }}>
                 <button
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="h-8 w-8 rounded-full bg-white shadow-sm flex items-center justify-center hover:bg-rose-100 transition-colors"
+                  className="h-10 w-10 flex items-center justify-center text-[#888] hover:bg-[#faf7f4] hover:text-[#1a1a1a] transition-colors duration-200"
                 >
                   <Minus className="h-3 w-3" />
                 </button>
-                <span className="w-8 text-center font-semibold text-sm">{quantity}</span>
+                <span className="w-10 text-center text-sm font-light text-[#1a1a1a]">{quantity}</span>
                 <button
                   onClick={() => setQuantity((q) => q + 1)}
-                  className="h-8 w-8 rounded-full bg-white shadow-sm flex items-center justify-center hover:bg-rose-100 transition-colors"
+                  className="h-10 w-10 flex items-center justify-center text-[#888] hover:bg-[#faf7f4] hover:text-[#1a1a1a] transition-colors duration-200"
                 >
                   <Plus className="h-3 w-3" />
                 </button>
               </div>
-              <span className="text-sm text-muted-foreground">
-                Итого: <strong className="text-foreground">{(parseFloat(product.price) * quantity).toLocaleString("ru-KZ")} ₸</strong>
-              </span>
             </div>
 
             {/* Add to cart */}
             <div className="flex gap-3">
-              <Button
-                size="lg"
+              <button
                 onClick={handleAddToCart}
                 disabled={!product.inStock}
-                className="flex-1 rounded-full font-medium shadow-lg hover:shadow-xl transition-all"
-                style={{ background: "linear-gradient(135deg, oklch(0.58 0.18 10), oklch(0.72 0.14 10))" }}
+                className="flex-1 flex items-center justify-center gap-3 py-4 text-[11px] tracking-[0.2em] uppercase font-medium transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
+                style={{
+                  background: added ? "#c9a96e" : "#1a1a1a",
+                  color: "white",
+                }}
               >
-                <ShoppingCart className="mr-2 h-4 w-4" />
-                В корзину
-              </Button>
+                {added ? (
+                  <>
+                    <Check className="w-3.5 h-3.5" />
+                    Добавлено
+                  </>
+                ) : (
+                  "В корзину"
+                )}
+              </button>
               <Link href="/cart">
-                <Button size="lg" variant="outline" className="rounded-full border-primary/30 text-primary hover:bg-rose-50">
+                <button
+                  className="px-6 py-4 text-[11px] tracking-[0.15em] uppercase font-light text-[#1a1a1a] hover:bg-[#1a1a1a] hover:text-white transition-all duration-300"
+                  style={{ border: "1px solid #e8e0d8" }}
+                >
                   Корзина
-                </Button>
+                </button>
               </Link>
             </div>
 
             {/* Tabs */}
-            <div className="border border-rose-100 rounded-2xl overflow-hidden">
-              <div className="flex border-b border-rose-100">
+            <div style={{ border: "1px solid #e8e0d8" }}>
+              <div className="flex" style={{ borderBottom: "1px solid #e8e0d8" }}>
                 {(["description", "ingredients", "usage"] as const).map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`flex-1 py-3 text-xs font-medium transition-colors ${
-                      activeTab === tab
-                        ? "bg-rose-50 text-primary border-b-2 border-primary"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
+                    className="flex-1 py-3.5 text-[10px] tracking-[0.2em] uppercase font-medium transition-all duration-200"
+                    style={{
+                      color: activeTab === tab ? "#1a1a1a" : "#888",
+                      borderBottom: activeTab === tab ? "2px solid #c9a96e" : "2px solid transparent",
+                      background: activeTab === tab ? "#faf7f4" : "white",
+                    }}
                   >
                     {tab === "description" ? "Описание" : tab === "ingredients" ? "Состав" : "Применение"}
                   </button>
                 ))}
               </div>
-              <div className="p-4 text-sm text-foreground/80 leading-relaxed min-h-[80px]">
+              <div className="p-5 text-[13px] text-[#555] leading-relaxed font-light min-h-[90px]">
                 {activeTab === "description" && (product.description ?? "Описание отсутствует")}
                 {activeTab === "ingredients" && (product.ingredients ?? "Состав не указан")}
                 {activeTab === "usage" && (product.usage ?? "Инструкция по применению не указана")}

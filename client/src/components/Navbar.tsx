@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { ShoppingCart, Menu, X } from "lucide-react";
 import { useCart } from "../contexts/CartContext";
 
-const LOGO_URL = "/manus-storage/amor-logo_5919afc4.jpg";
+const LOGO_URL = "/manus-storage/amor-logo_79705a52.jpg";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,10 +40,10 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-400 ${
+              className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isTransparent
           ? "bg-transparent"
-          : "bg-white/97 backdrop-blur-xl shadow-sm border-b border-rose-100/50"
+          : "bg-white/98 backdrop-blur-md shadow-sm border-b border-[#e8e0d8]"
       }`}
       style={{ transitionTimingFunction: "cubic-bezier(0.23, 1, 0.32, 1)" }}
     >
@@ -55,8 +55,8 @@ export default function Navbar() {
             <img
               src={LOGO_URL}
               alt="Amor Skincare"
-              className="rounded-full transition-transform duration-300 group-hover:scale-105 shrink-0"
-              style={{ height: "42px", width: "42px", objectFit: "contain", background: "white" }}
+              className="rounded-full transition-transform duration-300 group-hover:scale-105 shrink-0 ring-1"
+              style={{ height: "42px", width: "42px", objectFit: "contain", background: "white", outline: isTransparent ? "1px solid rgba(255,255,255,0.4)" : "1px solid #e8e0d8" }}
             />
             <div className="hidden sm:flex flex-col leading-none">
               <span
@@ -94,13 +94,11 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="relative text-sm font-medium tracking-wide transition-all duration-200 pb-0.5
-                  after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[1.5px] after:rounded-full
-                  after:transition-transform after:duration-250"
+                className="relative text-[10px] tracking-[0.25em] uppercase font-medium transition-all duration-200"
                 style={{
                   color: isTransparent
-                    ? location === link.href ? "white" : "rgba(255,255,255,0.72)"
-                    : location === link.href ? "oklch(0.50 0.20 12)" : "oklch(0.40 0.02 10)",
+                    ? location === link.href ? "white" : "rgba(255,255,255,0.75)"
+                    : location === link.href ? "#c9a96e" : "#1a1a1a",
                   transition: "color 0.4s ease",
                 }}
               >
@@ -113,7 +111,7 @@ export default function Navbar() {
           <div className="flex items-center gap-2">
             {/* WhatsApp */}
             <a
-              href="https://wa.me/77774779779"
+              href="https://wa.me/7774779779"
               target="_blank"
               rel="noopener noreferrer"
               className="hidden md:flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium transition-all duration-200 hover:scale-105 hover:shadow-md"
@@ -185,7 +183,7 @@ export default function Navbar() {
                 </Link>
               ))}
               <a
-                href="https://wa.me/77774779779"
+                href="https://wa.me/7774779779"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium text-white mt-1"
