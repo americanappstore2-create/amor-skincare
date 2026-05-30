@@ -197,7 +197,11 @@ export default function Admin() {
                 <div className="space-y-3 text-sm mb-5">
                   <div><span className="text-muted-foreground">Клиент:</span> <strong>{selectedOrderData.customerName}</strong></div>
                   <div><span className="text-muted-foreground">Телефон:</span> <a href={`tel:${selectedOrderData.customerPhone}`} className="text-primary">{selectedOrderData.customerPhone}</a></div>
-                  <div><span className="text-muted-foreground">Адрес:</span> {selectedOrderData.deliveryAddress}</div>
+                  {selectedOrderData.deliveryMethod === "pickup" ? (
+                    <div><span className="text-muted-foreground">Самовывоз:</span> <strong className="text-primary">{selectedOrderData.pickupLocation ?? "не указано"}</strong></div>
+                  ) : (
+                    <div><span className="text-muted-foreground">Адрес:</span> {selectedOrderData.deliveryAddress ?? "не указано"}</div>
+                  )}
                   <div><span className="text-muted-foreground">Оплата:</span> {paymentLabels[selectedOrderData.paymentMethod]}</div>
                   {selectedOrderData.notes && <div><span className="text-muted-foreground">Примечание:</span> {selectedOrderData.notes}</div>}
                 </div>

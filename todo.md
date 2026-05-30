@@ -40,3 +40,9 @@
 - [x] Auth me test
 - [x] Orders create validation tests
 - [x] Admin access control test
+
+## New Features (Round 2)
+- [x] Add "Самовывоз" (pickup) delivery option in checkout with store location selector
+- [x] Send WhatsApp message to manager (+7 777 477 9779) on new order with full order details
+- [x] Show delivery method in admin panel order details
+- [x] Update order schema to store delivery method (delivery/pickup) and pickup location

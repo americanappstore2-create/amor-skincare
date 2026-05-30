@@ -19,6 +19,8 @@ import {
   updateOrderStatus,
 } from "./db";
 
+const MANAGER_WHATSAPP = "77774779779"; // Manager's WhatsApp number (no +)
+
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
   if (ctx.user.role !== "admin") {
     throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
@@ -110,7 +112,9 @@ export const appRouter = router({
         z.object({
           customerName: z.string().min(1, "Введите имя"),
           customerPhone: z.string().min(7, "Введите номер телефона"),
-          deliveryAddress: z.string().min(5, "Введите адрес доставки"),
+          deliveryMethod: z.enum(["delivery", "pickup"]).default("delivery"),
+          deliveryAddress: z.string().optional(),
+          pickupLocation: z.string().optional(),
           paymentMethod: z.enum(["kaspi_red", "cash"]),
           items: z.array(
             z.object({
@@ -128,23 +132,39 @@ export const appRouter = router({
         const order = await createOrder({
           customerName: input.customerName,
           customerPhone: input.customerPhone,
-          deliveryAddress: input.deliveryAddress,
+          deliveryMethod: input.deliveryMethod,
+          deliveryAddress: input.deliveryAddress ?? null,
+          pickupLocation: input.pickupLocation ?? null,
           paymentMethod: input.paymentMethod,
           items: input.items,
           totalAmount: input.totalAmount.toFixed(2),
           notes: input.notes,
         } as any);
 
-        // Notify owner
+        // Build order summary text
         const itemsList = input.items
           .map((i) => `• ${i.name} × ${i.quantity} — ${(i.price * i.quantity).toLocaleString("ru-KZ")} ₸`)
           .join("\n");
+
+        const deliveryInfo = input.deliveryMethod === "pickup"
+          ? `Самовывоз: ${input.pickupLocation ?? "не указано"}`
+          : `Доставка по адресу: ${input.deliveryAddress ?? "не указано"}`;
+
+        const paymentLabel = input.paymentMethod === "kaspi_red" ? "Kaspi Red" : "Наличные";
+
+        const orderText = `🛍️ *НОВЫЙ ЗАКАЗ #${order?.id ?? ""}*\n\n👤 *Клиент:* ${input.customerName}\n📞 *Телефон:* ${input.customerPhone}\n📦 *${deliveryInfo}*\n💳 *Оплата:* ${paymentLabel}\n\n*Товары:*\n${itemsList}\n\n💰 *Итого: ${input.totalAmount.toLocaleString("ru-KZ")} ₸*${input.notes ? `\n\n📝 Примечание: ${input.notes}` : ""}`;
+
+        // Notify owner via in-app notification
         await notifyOwner({
           title: `🛍️ Новый заказ от ${input.customerName}`,
-          content: `Телефон: ${input.customerPhone}\nАдрес: ${input.deliveryAddress}\nОплата: ${input.paymentMethod === "kaspi_red" ? "Kaspi Red" : "Наличные"}\n\nТовары:\n${itemsList}\n\nИтого: ${input.totalAmount.toLocaleString("ru-KZ")} ₸`,
-        });
+          content: orderText,
+        }).catch(() => {}); // Don't block order creation if notification fails
 
-        return { success: true, orderId: order?.id };
+        return {
+          success: true,
+          orderId: order?.id,
+          whatsappUrl: `https://wa.me/${MANAGER_WHATSAPP}?text=${encodeURIComponent(orderText)}`,
+        };
       }),
 
     list: adminProcedure.query(async () => {
@@ -194,6 +214,7 @@ export const appRouter = router({
 - WhatsApp: wa.me/7774779779 (номер: +7 777 477 97 79)
 - Режим работы: Пн-Вс 10:00–21:00
 - Оплата: Kaspi Red, наличные
+- Доставка: курьерская доставка по городу или самовывоз из магазина
 
 Бренды в магазине: Rorobell, Unleashia, rom&nd, JUST, VT, Davines, Biodance, Ederra lab, Angiopharm, Axis Y, La Sultan, Embrace, Genosys.
 

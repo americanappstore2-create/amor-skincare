@@ -54,7 +54,9 @@ export const orders = mysqlTable("orders", {
   id: int("id").autoincrement().primaryKey(),
   customerName: varchar("customerName", { length: 255 }).notNull(),
   customerPhone: varchar("customerPhone", { length: 50 }).notNull(),
-  deliveryAddress: text("deliveryAddress").notNull(),
+  deliveryAddress: text("deliveryAddress"),
+  deliveryMethod: mysqlEnum("deliveryMethod", ["delivery", "pickup"]).default("delivery").notNull(),
+  pickupLocation: varchar("pickupLocation", { length: 255 }),
   paymentMethod: mysqlEnum("paymentMethod", ["kaspi_red", "cash"]).notNull(),
   items: json("items").notNull(), // Array of { productId, name, price, quantity }
   totalAmount: decimal("totalAmount", { precision: 10, scale: 2 }).notNull(),
