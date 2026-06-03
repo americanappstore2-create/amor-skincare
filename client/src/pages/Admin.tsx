@@ -7,7 +7,6 @@ import {
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { getLoginUrl } from "@/const";
 import { toast } from "sonner";
 
 // ── Constants ──────────────────────────────────────────────────────────────
@@ -42,6 +41,53 @@ const emptyForm = () => ({
   price: "", imageUrl: "", inStock: 1,
 });
 
+// ── Login Form ─────────────────────────────────────────────────────────────
+function LoginForm() {
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const utils = trpc.useUtils();
+  const loginMutation = trpc.auth.login.useMutation({
+    onSuccess: () => {
+      utils.auth.me.invalidate();
+    },
+    onError: (e) => setError(e.message),
+  });
+
+  const handleSubmit = () => {
+    setError("");
+    loginMutation.mutate({ password });
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-[#faf7f4]">
+      <div className="text-center max-w-sm mx-auto px-6 w-full">
+        <div className="w-16 h-16 mx-auto mb-6 flex items-center justify-center border border-[#c9a96e]">
+          <LogIn className="w-6 h-6 text-[#c9a96e]" />
+        </div>
+        <h1 className="font-serif text-2xl font-light text-[#1a1a1a] mb-2">Панель администратора</h1>
+        <p className="text-sm text-[#888] font-light mb-8">Введите пароль для доступа</p>
+        <input
+          type="password"
+          placeholder="Пароль"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+          className="w-full border border-[#ddd] px-4 py-3 text-sm mb-3 focus:outline-none focus:border-[#c9a96e] bg-white"
+        />
+        {error && <p className="text-red-500 text-xs mb-3">{error}</p>}
+        <button
+          onClick={handleSubmit}
+          disabled={loginMutation.isPending}
+          className="w-full inline-flex items-center justify-center gap-2 bg-[#1a1a1a] text-white px-8 py-3 text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#c9a96e] transition-colors duration-300 disabled:opacity-50"
+        >
+          <LogIn className="w-3.5 h-3.5" />
+          {loginMutation.isPending ? "Вход..." : "Войти"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ── Main ───────────────────────────────────────────────────────────────────
 export default function Admin() {
   const { user, loading, isAuthenticated } = useAuth();
@@ -56,20 +102,7 @@ export default function Admin() {
   }
 
   if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#faf7f4]">
-        <div className="text-center max-w-sm mx-auto px-6">
-          <div className="w-16 h-16 mx-auto mb-6 flex items-center justify-center border border-[#c9a96e]">
-            <LogIn className="w-6 h-6 text-[#c9a96e]" />
-          </div>
-          <h1 className="font-serif text-2xl font-light text-[#1a1a1a] mb-2">Панель администратора</h1>
-          <p className="text-sm text-[#888] font-light mb-8">Войдите в аккаунт для доступа</p>
-          <a href={getLoginUrl()} className="inline-flex items-center gap-2 bg-[#1a1a1a] text-white px-8 py-3 text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#c9a96e] transition-colors duration-300">
-            <LogIn className="w-3.5 h-3.5" /> Войти
-          </a>
-        </div>
-      </div>
-    );
+    return <LoginForm />;
   }
 
   if (user?.role !== "admin") {
