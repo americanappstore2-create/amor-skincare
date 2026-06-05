@@ -149,7 +149,6 @@ export const appRouter = router({
           deliveryMethod: z.enum(["delivery", "pickup"]).default("delivery"),
           deliveryAddress: z.string().optional(),
           pickupLocation: z.string().optional(),
-          // Simplified payment: kaspi or cash
           paymentMethod: z.enum(["kaspi_red", "cash"]),
           items: z.array(
             z.object({
@@ -164,7 +163,6 @@ export const appRouter = router({
         })
       )
       .mutation(async ({ input }) => {
-        // Save order to DB
         const order = await createOrder({
           customerName: input.customerName,
           customerPhone: input.customerPhone,
@@ -179,7 +177,6 @@ export const appRouter = router({
 
         const orderId = order?.id ?? "—";
 
-        // Build human-readable message
         const itemsList = input.items
           .map((i) => `• ${i.name} × ${i.quantity} — ${(i.price * i.quantity).toLocaleString("ru-KZ")} ₸`)
           .join("\n");
@@ -188,7 +185,6 @@ export const appRouter = router({
           ? `📍 Самовывоз: ${input.pickupLocation ?? "не указано"}`
           : `🚚 Доставка: ${input.deliveryAddress ?? "не указано"}`;
 
-        // Payment label — simplified
         const paymentLabel = input.paymentMethod === "kaspi_red" ? "Kaspi" : "Наличные";
 
         const orderText =
@@ -201,13 +197,11 @@ export const appRouter = router({
           `💰 *Итого: ${input.totalAmount.toLocaleString("ru-KZ")} ₸*` +
           (input.notes ? `\n\n📝 *Примечание:* ${input.notes}` : "");
 
-        // 1. In-app notification to owner (admin panel)
         await notifyOwner({
           title: `🛍️ Новый заказ #${orderId} от ${input.customerName}`,
           content: orderText,
         }).catch(() => {});
 
-        // 2. WhatsApp deep-link for manager (opens prefilled message)
         const whatsappUrl = `https://wa.me/${MANAGER_WHATSAPP}?text=${encodeURIComponent(orderText)}`;
 
         return {
