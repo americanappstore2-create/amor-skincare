@@ -27,6 +27,7 @@ export type InvokeResult = {
 
 export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
   const apiKey = process.env.GEMINI_API_KEY;
+console.log("GEMINI_API_KEY present:", !!apiKey);
   if (!apiKey) {
     throw new Error("GEMINI_API_KEY is not configured");
   }
