@@ -21,8 +21,8 @@ This template gives you a React 19 + Tailwind 4 + Express 4 + tRPC 11 stack with
 4. Build frontend experience according to `Frontend Workflow`
 5. Cover your changes with Vitest specs inside `server/*.test.ts` (see `server/auth.logout.test.ts`) and run `pnpm test`.
 
-That's it—no manual REST routes, no Axios client, no shared contract files.
-
+That's it—no manual REST routes, no Axios client, no shared contract files. f
+    
 ---
 
 ## Key Files
