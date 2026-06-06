@@ -20,18 +20,19 @@ RUN apt-get update -qq && \
 
 COPY package.json pnpm-lock.yaml ./
 COPY patches ./patches
-RUN pnpm install --frozen-lockfile --prod=false
+RUN pnpm install --frozen-lockfile
 
 COPY . .
 
 RUN pnpm run build
 
-RUN pnpm prune --prod
-
 
 FROM base
 
-COPY --from=build /app /app
+COPY --from=build /app/node_modules /app/node_modules
+COPY --from=build /app/dist /app/dist
+COPY --from=build /app/package.json /app/package.json
+COPY --from=build /app/drizzle /app/drizzle
 
 EXPOSE 8080
 CMD [ "pnpm", "run", "start" ]
