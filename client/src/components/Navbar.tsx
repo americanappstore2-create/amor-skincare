@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { ShoppingCart, Menu, X } from "lucide-react";
 import { useCart } from "../contexts/CartContext";
 
-const LOGO_URL = "/manus-storage/amor-logo_79705a52.jpg";
+const LOGO_URL = "/logo.jpg";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,7 +13,6 @@ export default function Navbar() {
   const [prevCartCount, setPrevCartCount] = useState(totalItems);
   const [cartAnimating, setCartAnimating] = useState(false);
 
-  // Only the home page has a dark hero — all other pages have light backgrounds
   const isHome = location === "/";
 
   useEffect(() => {
@@ -30,7 +29,6 @@ export default function Navbar() {
     setPrevCartCount(totalItems);
   }, [totalItems, prevCartCount]);
 
-  // On home page: transparent (white text) until scrolled; on other pages: always white bg
   const isTransparent = isHome && !scrolled;
 
   const navLinks = [
@@ -109,7 +107,6 @@ export default function Navbar() {
 
           {/* Right side */}
           <div className="flex items-center gap-2">
-            {/* WhatsApp */}
             <a
               href="https://wa.me/7774779779"
               target="_blank"
@@ -129,7 +126,6 @@ export default function Navbar() {
               WhatsApp
             </a>
 
-            {/* Cart */}
             <Link href="/cart" className="relative p-2.5 rounded-full transition-all duration-200 hover:scale-105 group">
               <ShoppingCart
                 className="h-5 w-5 transition-colors duration-200"
@@ -152,7 +148,6 @@ export default function Navbar() {
               )}
             </Link>
 
-            {/* Mobile menu toggle */}
             <button
               className="md:hidden p-2 rounded-full transition-colors"
               onClick={() => setIsOpen(!isOpen)}
@@ -164,7 +159,6 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile menu */}
         {isOpen && (
           <div className="md:hidden absolute top-full left-0 right-0 bg-white/98 backdrop-blur-xl border-b border-rose-100 shadow-xl animate-fade-in">
             <div className="container py-5 flex flex-col gap-1">
