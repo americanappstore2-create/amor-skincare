@@ -4,7 +4,6 @@ import { trpc } from "@/lib/trpc";
 import ProductCard from "@/components/ProductCard";
 import { ArrowRight, MapPin, Phone, Instagram, ChevronDown } from "lucide-react";
 
-// Staggered fade-in hook
 function useFadeIn(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -53,13 +52,12 @@ export default function Home() {
           muted
           loop
           playsInline
-          poster="/manus-storage/amor-logo_79705a52.jpg"
+          poster="/logo.jpg"
         >
-          <source src="/manus-storage/hero-bg_f449dad4.webm" type="video/webm" />
-          <source src="/manus-storage/hero-bg_0ad9809e.mp4" type="video/mp4" />
+          <source src="/hero.mp4" type="video/mp4" />
         </video>
 
-        {/* Dark overlay — gradient from bottom */}
+        {/* Dark overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/70" />
 
         {/* Hero Content */}
@@ -67,19 +65,17 @@ export default function Home() {
           {/* Logo */}
           <div className="hero-logo-enter mb-8">
             <img
-              src="/manus-storage/amor-logo_79705a52.jpg"
+              src="/logo.jpg"
               alt="AMOR Skin Care"
               className="w-28 h-28 md:w-36 md:h-36 rounded-full object-contain bg-white/95 shadow-2xl ring-2 ring-white/30"
             />
           </div>
 
-          {/* Eyebrow */}
           <p className="hero-text-enter text-[10px] md:text-xs tracking-[0.35em] uppercase text-white/70 mb-4 font-light"
              style={{ animationDelay: "0.2s" }}>
             Premium Korean &amp; European Skincare
           </p>
 
-          {/* Main Title */}
           <h1 className="hero-text-enter font-serif text-4xl md:text-6xl lg:text-7xl font-light tracking-wide mb-4 leading-tight"
               style={{ animationDelay: "0.4s" }}>
             AMOR
@@ -88,13 +84,11 @@ export default function Home() {
             </span>
           </h1>
 
-          {/* Tagline */}
           <p className="hero-text-enter font-serif italic text-lg md:text-2xl text-white/85 mb-10 tracking-wide"
              style={{ animationDelay: "0.6s" }}>
             "Твой premium skincare space."
           </p>
 
-          {/* CTA Buttons */}
           <div className="hero-text-enter flex flex-col sm:flex-row gap-4 items-center"
                style={{ animationDelay: "0.8s" }}>
             <Link href="/catalog">
@@ -117,7 +111,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Scroll indicator */}
         <div className={`absolute bottom-8 left-1/2 -translate-x-1/2 z-10 transition-opacity duration-500 ${scrolled ? "opacity-0" : "opacity-100"}`}>
           <ChevronDown className="w-5 h-5 text-white/60 animate-bounce" />
         </div>
@@ -156,11 +149,8 @@ export default function Home() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-6">
           {featuredProducts.length > 0
             ? featuredProducts.map((product, i) => (
-                <div
-                  key={product.id}
-                  className="opacity-0 animate-fade-in-up"
-                  style={{ animationDelay: `${i * 80}ms`, animationFillMode: "forwards" }}
-                >
+                <div key={product.id} className="opacity-0 animate-fade-in-up"
+                     style={{ animationDelay: `${i * 80}ms`, animationFillMode: "forwards" }}>
                   <ProductCard product={product} />
                 </div>
               ))
@@ -197,15 +187,9 @@ export default function Home() {
       {/* ── EDITORIAL BANNER ── */}
       <section className="py-20 px-6">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-0 items-stretch">
-          {/* Left: image */}
           <div className="relative overflow-hidden bg-[#f5f0eb] aspect-[4/5] md:aspect-auto">
-            <img
-              src="/manus-storage/amor-logo_79705a52.jpg"
-              alt="Amor Skincare"
-              className="w-full h-full object-contain p-12 md:p-16"
-            />
+            <img src="/logo.jpg" alt="Amor Skincare" className="w-full h-full object-contain p-12 md:p-16" />
           </div>
-          {/* Right: text */}
           <div className="bg-[#1a1a1a] text-white flex flex-col justify-center px-10 md:px-16 py-16">
             <p className="text-[10px] tracking-[0.35em] uppercase text-[#c9a96e] mb-6 font-medium">О нас</p>
             <h2 className="font-serif text-3xl md:text-4xl font-light leading-snug mb-6 tracking-wide">
@@ -217,12 +201,8 @@ export default function Home() {
               Только сертифицированная продукция, только оригинальные товары. Мы помогаем каждому
               найти идеальный уход.
             </p>
-            <a
-              href="https://www.instagram.com/amor.skincare.kz/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex items-center gap-3 border border-white/40 text-white px-8 py-3 text-xs tracking-[0.2em] uppercase font-medium hover:bg-white hover:text-[#1a1a1a] transition-all duration-300 w-fit"
-            >
+            <a href="https://www.instagram.com/amor.skincare.kz/" target="_blank" rel="noopener noreferrer"
+               className="group inline-flex items-center gap-3 border border-white/40 text-white px-8 py-3 text-xs tracking-[0.2em] uppercase font-medium hover:bg-white hover:text-[#1a1a1a] transition-all duration-300 w-fit">
               <Instagram className="w-3.5 h-3.5" />
               Instagram
             </a>
@@ -235,11 +215,8 @@ export default function Home() {
                className={`py-20 px-6 bg-[#faf7f4] border-t border-[#e8e0d8] transition-all duration-700 ${storesFade.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-[10px] tracking-[0.35em] uppercase text-[#c9a96e] mb-3 font-medium">Наши магазины</p>
-          <h2 className="font-serif text-3xl md:text-4xl font-light text-[#1a1a1a] tracking-wide mb-3">
-            Найдите нас
-          </h2>
+          <h2 className="font-serif text-3xl md:text-4xl font-light text-[#1a1a1a] tracking-wide mb-3">Найдите нас</h2>
           <div className="w-12 h-px bg-[#c9a96e] mx-auto mb-12" />
-
           <div className="grid md:grid-cols-2 gap-8">
             {[
               { city: "Уральск", address: "ТРЦ Атриум", hours: "10:00 – 21:00" },
@@ -262,30 +239,20 @@ export default function Home() {
                className={`py-20 px-6 text-center transition-all duration-700 ${ctaFade.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
         <div className="max-w-xl mx-auto">
           <p className="text-[10px] tracking-[0.35em] uppercase text-[#c9a96e] mb-3 font-medium">Связаться</p>
-          <h2 className="font-serif text-3xl md:text-4xl font-light text-[#1a1a1a] tracking-wide mb-4">
-            Есть вопросы?
-          </h2>
+          <h2 className="font-serif text-3xl md:text-4xl font-light text-[#1a1a1a] tracking-wide mb-4">Есть вопросы?</h2>
           <p className="text-sm text-[#888] font-light mb-8 leading-relaxed">
             Напишите нам в WhatsApp — поможем подобрать уход для вашего типа кожи
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="https://wa.me/7774779779"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex items-center justify-center gap-3 bg-[#25D366] text-white px-10 py-3.5 text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#1ebe5d] transition-all duration-300"
-            >
+            <a href="https://wa.me/7774779779" target="_blank" rel="noopener noreferrer"
+               className="group inline-flex items-center justify-center gap-3 bg-[#25D366] text-white px-10 py-3.5 text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#1ebe5d] transition-all duration-300">
               <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-current" xmlns="http://www.w3.org/2000/svg">
                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
               </svg>
               Написать в WhatsApp
             </a>
-            <a
-              href="https://www.instagram.com/amor.skincare.kz/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-3 border border-[#1a1a1a] text-[#1a1a1a] px-10 py-3.5 text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#1a1a1a] hover:text-white transition-all duration-300"
-            >
+            <a href="https://www.instagram.com/amor.skincare.kz/" target="_blank" rel="noopener noreferrer"
+               className="inline-flex items-center justify-center gap-3 border border-[#1a1a1a] text-[#1a1a1a] px-10 py-3.5 text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#1a1a1a] hover:text-white transition-all duration-300">
               <Instagram className="w-3.5 h-3.5" />
               Instagram
             </a>
