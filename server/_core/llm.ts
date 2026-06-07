@@ -1,5 +1,3 @@
-import { ENV } from "./env";
-
 export type Role = "system" | "user" | "assistant";
 
 export type Message = {
@@ -27,16 +25,15 @@ export type InvokeResult = {
 
 export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
   const apiKey = process.env.GEMINI_API_KEY;
-console.log("GEMINI_API_KEY present:", !!apiKey);
+  console.log("GEMINI_API_KEY present:", !!apiKey);
+
   if (!apiKey) {
     throw new Error("GEMINI_API_KEY is not configured");
   }
 
-  // Separate system message from conversation
   const systemMsg = params.messages.find((m) => m.role === "system");
   const userMessages = params.messages.filter((m) => m.role !== "system");
 
-  // Convert to Gemini format
   const contents = userMessages.map((m) => ({
     role: m.role === "assistant" ? "model" : "user",
     parts: [{ text: m.content }],
@@ -58,6 +55,7 @@ console.log("GEMINI_API_KEY present:", !!apiKey);
 
   if (!response.ok) {
     const errorText = await response.text();
+    console.error("Gemini error:", response.status, errorText);
     throw new Error(`Gemini API error: ${response.status} – ${errorText}`);
   }
 
