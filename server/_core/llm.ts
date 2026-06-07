@@ -24,54 +24,32 @@ export type InvokeResult = {
 };
 
 export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
-  const apiKey = process.env.GEMINI_API_KEY;
-  console.log("GEMINI_API_KEY present:", !!apiKey);
+  const apiKey = process.env.GROQ_API_KEY;
 
   if (!apiKey) {
-    throw new Error("GEMINI_API_KEY is not configured");
-  }
-
-  const systemMsg = params.messages.find((m) => m.role === "system");
-  const userMessages = params.messages.filter((m) => m.role !== "system");
-
-  const contents = userMessages.map((m) => ({
-    role: m.role === "assistant" ? "model" : "user",
-    parts: [{ text: m.content }],
-  }));
-
-  const body: Record<string, unknown> = { contents };
-  if (systemMsg) {
-    body.systemInstruction = { parts: [{ text: systemMsg.content }] };
+    throw new Error("GROQ_API_KEY is not configured");
   }
 
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+    "https://api.groq.com/openai/v1/chat/completions",
     {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: "llama-3.1-8b-instant",
+        messages: params.messages,
+        max_tokens: 1024,
+      }),
     }
   );
 
   if (!response.ok) {
     const errorText = await response.text();
-    console.error("Gemini error:", response.status, errorText);
-    throw new Error(`Gemini API error: ${response.status} – ${errorText}`);
+    throw new Error(`Groq API error: ${response.status} – ${errorText}`);
   }
 
-  const data = await response.json();
-  const text = data.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
-
-  return {
-    id: "gemini",
-    created: Date.now(),
-    model: "gemini-2.0-flash",
-    choices: [
-      {
-        index: 0,
-        message: { role: "assistant", content: text },
-        finish_reason: "stop",
-      },
-    ],
-  };
+  return await response.json();
 }
