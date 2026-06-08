@@ -24,31 +24,30 @@ export type InvokeResult = {
 };
 
 export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
-  const apiKey = process.env.GROQ_API_KEY;
+  const { ENV } = await import("./env");
+  const apiKey = ENV.forgeApiKey;
+  const apiUrl = ENV.forgeApiUrl;
 
-  if (!apiKey) {
-    throw new Error("GROQ_API_KEY is not configured");
+  if (!apiKey || !apiUrl) {
+    throw new Error("Manus LLM API is not configured (BUILT_IN_FORGE_API_KEY or BUILT_IN_FORGE_API_URL missing)");
   }
 
-  const response = await fetch(
-    "https://api.groq.com/openai/v1/chat/completions",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: "llama-3.1-8b-instant",
-        messages: params.messages,
-        max_tokens: 1024,
-      }),
-    }
-  );
+  const response = await fetch(`${apiUrl}/v1/chat/completions`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: "gpt-4o-mini",
+      messages: params.messages,
+      max_tokens: 1024,
+    }),
+  });
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Groq API error: ${response.status} – ${errorText}`);
+    throw new Error(`Manus LLM API error: ${response.status} – ${errorText}`);
   }
 
   return await response.json();

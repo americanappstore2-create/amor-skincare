@@ -57,11 +57,12 @@ if (typeof window !== 'undefined') {
   const replaceManusBadge = () => {
     // Search all elements for "Made with Manus" text
     const allElements = document.querySelectorAll('*');
-    for (const el of allElements) {
+    for (const el of Array.from(allElements)) {
       if (el.textContent?.includes('Made with Manus')) {
         // Hide the original element
-        el.style.display = 'none !important';
-        el.style.visibility = 'hidden';
+        const htmlEl = el as HTMLElement;
+        htmlEl.style.display = 'none !important';
+        htmlEl.style.visibility = 'hidden';
         
         // Create our custom badge
         const customBadge = document.createElement('div');
