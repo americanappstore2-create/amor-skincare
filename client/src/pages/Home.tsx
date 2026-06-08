@@ -54,7 +54,7 @@ export default function Home() {
           playsInline
           poster="/logo.jpg"
         >
-          <source src="/hero.mp4" type="video/mp4" />
+          <source src="/manus-storage/hero-bg_aa9497f7.mp4" type="video/mp4" />
         </video>
 
         {/* Dark overlay */}

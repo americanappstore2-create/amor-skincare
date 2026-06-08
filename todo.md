@@ -79,3 +79,7 @@
 - [x] Admin UI: add delete button for each order with confirmation dialog
 - [x] Admin UI: update stats after order deletion
 - [x] Test delete order functionality
+
+## Video Background Fix (Round 6)
+- [x] Upload hero video to S3 storage
+- [x] Update Home.tsx to use S3 URL instead of deleted local file
