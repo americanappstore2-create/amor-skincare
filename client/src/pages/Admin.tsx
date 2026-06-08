@@ -543,7 +543,12 @@ function OrdersTab() {
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
   const updateStatus = trpc.orders.updateStatus.useMutation({
-    onSuccess: () => { utils.orders.list.invalidate(); toast.success("Статус обновлён"); },
+    onSuccess: () => { utils.orders.list.invalidate(); utils.admin.stats.invalidate(); toast.success("Статус обновлён"); },
+    onError: (e) => toast.error(e.message),
+  });
+
+  const deleteOrder = trpc.orders.delete.useMutation({
+    onSuccess: () => { utils.orders.list.invalidate(); utils.admin.stats.invalidate(); toast.success("Заказ удалён"); },
     onError: (e) => toast.error(e.message),
   });
 
@@ -670,6 +675,21 @@ function OrdersTab() {
                               </button>
                             ))}
                           </div>
+                        </div>
+
+                        <div className="mt-4 pt-4 border-t border-[#e8e0d8]">
+                          <button
+                            onClick={() => {
+                              if (window.confirm(`Удалить заказ #${order.id}? Это действие нельзя отменить.`)) {
+                                deleteOrder.mutate({ id: order.id });
+                              }
+                            }}
+                            disabled={deleteOrder.isPending}
+                            className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium bg-white border border-[#e8e0d8] text-[#c9a96e] hover:border-[#c9a96e] hover:bg-[#fff9f5] transition-all disabled:opacity-50"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                            Удалить заказ
+                          </button>
                         </div>
                       </div>
                     </div>

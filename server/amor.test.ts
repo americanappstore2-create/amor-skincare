@@ -120,3 +120,20 @@ describe("products.list - admin access", () => {
     ).rejects.toThrow();
   });
 });
+
+describe("orders.delete - admin access", () => {
+  it("admin can delete order", async () => {
+    const { ctx } = createAuthContext("admin");
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.orders.delete({ id: 999 });
+    expect(result).toEqual({ success: true });
+  });
+
+  it("non-admin cannot delete order", async () => {
+    const { ctx } = createAuthContext("user");
+    const caller = appRouter.createCaller(ctx);
+    await expect(
+      caller.orders.delete({ id: 999 })
+    ).rejects.toThrow();
+  });
+});

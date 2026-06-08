@@ -18,6 +18,7 @@ import {
   getAllOrders,
   getOrderById,
   updateOrderStatus,
+  deleteOrder,
 } from "./db";
 
 const MANAGER_WHATSAPP = "77774779779";
@@ -233,6 +234,13 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         await updateOrderStatus(input.id, input.status);
+        return { success: true };
+      }),
+
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await deleteOrder(input.id);
         return { success: true };
       }),
   }),
