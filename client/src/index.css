@@ -320,7 +320,25 @@ footer > div:has([class*="powered"]),
 /* Target fixed/absolute positioned elements in bottom right */
 [style*="position: fixed"][style*="bottom"][style*="right"],
 [style*="position: absolute"][style*="bottom"][style*="right"] {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
+  /* Make it extremely small */
+  font-size: 2px !important;
+  width: 2px !important;
+  height: 2px !important;
+  min-width: 2px !important;
+  min-height: 2px !important;
+  max-width: 2px !important;
+  max-height: 2px !important;
+  
+  /* Make it almost invisible */
+  opacity: 0.05 !important;
+  color: rgba(255, 255, 255, 0.05) !important;
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  
+  /* Prevent any overflow */
+  overflow: hidden !important;
+  text-indent: -9999px !important;
+  line-height: 1px !important;
 }
