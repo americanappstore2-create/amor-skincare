@@ -2,11 +2,13 @@
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
-
 app = 'amor-skincare'
 primary_region = 'iad'
 
 [build]
+
+[deploy]
+  release_command = "pnpm db:push"
 
 [http_service]
   internal_port = 8080
