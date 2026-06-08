@@ -83,3 +83,6 @@
 ## Video Background Fix (Round 6)
 - [x] Upload hero video to S3 storage
 - [x] Update Home.tsx to use S3 URL instead of deleted local file
+
+## Hide Manus Branding (Round 7)
+- [x] Add CSS to hide "Made with Manus" badge and related elements

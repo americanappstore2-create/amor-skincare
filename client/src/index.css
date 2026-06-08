@@ -301,3 +301,20 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+
+/* ─── Hide Manus Branding ────────────────────────────── */
+[data-manus],
+.manus-badge,
+#manus-badge,
+[class*="manus"],
+[id*="manus"],
+[data-testid*="manus"],
+.powered-by-manus,
+[class*="powered"],
+[class*="badge"],
+[class*="branding"],
+footer > div:has([class*="manus"]),
+footer > div:has([class*="powered"]) {
+  display: none !important;
+}
