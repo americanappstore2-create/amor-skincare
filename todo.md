@@ -86,3 +86,4 @@
 
 ## Hide Manus Branding (Round 7)
 - [x] Add CSS to hide "Made with Manus" badge and related elements
+- [x] Make badge tiny and almost invisible (2px, 5% opacity)
