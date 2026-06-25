@@ -1,4 +1,3 @@
-@import "tailwindcss";
 @import "tw-animate-css";
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap');
 
@@ -51,150 +50,65 @@
   }
 
   body {
-    background-color: var(--background);
+    font-family: 'DM Sans', sans-serif;
+    background: var(--background);
     color: var(--foreground);
-    font-family: 'DM Sans', system-ui, sans-serif;
-    font-weight: 300;
-    line-height: 1.6;
-    font-size: 15px;
   }
 
-  /* Serif headings */
-  h1, h2, h3, h4, h5, h6,
-  .font-serif {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-weight: 300;
-    letter-spacing: 0.02em;
-    line-height: 1.2;
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
   }
 
-  /* Fluid type scale */
-  h1 { font-size: clamp(2.5rem, 6vw, 5rem); }
-  h2 { font-size: clamp(1.8rem, 4vw, 3rem); }
-  h3 { font-size: clamp(1.3rem, 2.5vw, 1.8rem); }
-  h4 { font-size: clamp(1.1rem, 2vw, 1.4rem); }
+  button {
+    font-family: 'DM Sans', sans-serif;
+  }
 
-  /* Thin scrollbar */
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: var(--cream); }
-  ::-webkit-scrollbar-thumb { background: var(--gold-light); }
-
-  /* Selection */
-  ::selection { background: var(--gold-light); color: var(--dark); }
-
-  /* Buttons base */
-  button { cursor: pointer; }
-  button:active { transform: scale(0.98); }
-
-  /* Borders */
-  .border { border-color: var(--border-subtle); }
+  input, textarea, select {
+    font-family: 'DM Sans', sans-serif;
+  }
 }
 
-/* ─── Animations ─────────────────────────────────────── */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
+/* ─── Flex Defaults ─────────────────────────────────── */
+.flex {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+/* ─── Container ─────────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 2rem);
 }
 
-@keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to   { opacity: 1; transform: scale(1); }
-}
-
-@keyframes heroLogoEnter {
-  0%   { opacity: 0; transform: scale(0.8) translateY(20px); }
-  60%  { opacity: 1; transform: scale(1.03) translateY(-4px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-@keyframes heroTextEnter {
-  from { opacity: 0; transform: translateY(30px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-
-@keyframes shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-/* Animation utility classes */
-.animate-fade-in-up {
-  animation: fadeInUp 0.6s var(--ease-out) both;
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.5s var(--ease-out) both;
-}
-
-.animate-scale-in {
-  animation: scaleIn 0.4s var(--ease-out) both;
-}
-
-.animate-marquee {
-  animation: marquee 30s linear infinite;
-}
-
-.hero-logo-enter {
-  animation: heroLogoEnter 1s var(--ease-out) both;
-}
-
-.hero-text-enter {
-  animation: heroTextEnter 0.8s var(--ease-out) both;
-}
-
-/* Delay utilities */
-.delay-100 { animation-delay: 100ms; }
-.delay-200 { animation-delay: 200ms; }
-.delay-300 { animation-delay: 300ms; }
-.delay-400 { animation-delay: 400ms; }
-.delay-500 { animation-delay: 500ms; }
-.delay-600 { animation-delay: 600ms; }
-.delay-700 { animation-delay: 700ms; }
-.delay-800 { animation-delay: 800ms; }
-
-/* Skeleton shimmer */
-.skeleton {
-  background: linear-gradient(90deg, #f5f0eb 25%, #ede8e2 50%, #f5f0eb 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
-
-/* ─── Components ─────────────────────────────────────── */
-
-/* Eyebrow label */
-.text-eyebrow {
-  font-size: 10px;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: var(--gold);
+/* ─── Luxury Button Styles ─────────────────────────── */
+.btn-luxury-primary {
+  background: var(--dark);
+  color: white;
+  border-color: var(--dark);
   font-weight: 500;
-  font-family: 'DM Sans', sans-serif;
-}
-
-/* Luxury button */
-.btn-luxury {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.875rem 2.5rem;
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  font-weight: 500;
-  font-family: 'DM Sans', sans-serif;
+  letter-spacing: 0.05em;
   transition: all 0.3s var(--ease-out);
-  border: 1px solid currentColor;
-  cursor: pointer;
+}
+.btn-luxury-primary:hover {
+  background: transparent;
+  color: var(--dark);
+}
+
+.btn-luxury-secondary {
+  background: var(--gold);
+  color: white;
+  border-color: var(--gold);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  transition: all 0.3s var(--ease-out);
+}
+.btn-luxury-secondary:hover {
+  background: var(--gold-light);
+  border-color: var(--gold-light);
 }
 
 .btn-luxury-dark {
@@ -303,7 +217,7 @@
 }
 
 
-/* ─── Make Manus Badge Tiny and Almost Invisible ────────────────────────────── */
+/* ─── Make Manus Badge Barely Visible ────────────────────────────── */
 /* Target any element that might be the Made with Manus badge */
 [data-manus],
 .manus-badge,

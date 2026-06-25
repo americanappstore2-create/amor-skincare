@@ -77,3 +77,30 @@ export const orders = mysqlTable("orders", {
 
 export type Order = typeof orders.$inferSelect;
 export type InsertOrder = typeof orders.$inferInsert;
+
+export const loyaltyCustomers = mysqlTable("loyalty_customers", {
+  id: int("id").autoincrement().primaryKey(),
+  phone: varchar("phone", { length: 50 }).notNull().unique(),
+  name: varchar("name", { length: 255 }).notNull(),
+  birthDate: timestamp("birthDate"),
+  bonusBalance: int("bonusBalance").default(0).notNull(),
+  discountPercent: decimal("discountPercent", { precision: 5, scale: 2 }).default("0").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type LoyaltyCustomer = typeof loyaltyCustomers.$inferSelect;
+export type InsertLoyaltyCustomer = typeof loyaltyCustomers.$inferInsert;
+
+export const loyaltyTransactions = mysqlTable("loyalty_transactions", {
+  id: int("id").autoincrement().primaryKey(),
+  customerId: int("customerId").notNull(),
+  type: mysqlEnum("type", ["bonus_earned", "bonus_spent", "discount_applied", "manual_adjustment"]).notNull(),
+  amount: int("amount").notNull(), // bonus points or discount amount
+  description: text("description"),
+  orderId: int("orderId"), // optional reference to order
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type LoyaltyTransaction = typeof loyaltyTransactions.$inferSelect;
+export type InsertLoyaltyTransaction = typeof loyaltyTransactions.$inferInsert;
