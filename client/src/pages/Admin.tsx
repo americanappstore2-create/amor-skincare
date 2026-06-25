@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import {
   Package, ShoppingBag, TrendingUp, AlertCircle,
   Plus, Pencil, Trash2, X, Check, Upload, ChevronDown,
-  LogIn, LayoutDashboard, ClipboardList, RefreshCw
+  LogIn, LayoutDashboard, ClipboardList, RefreshCw, Heart
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -33,7 +33,7 @@ const ORDER_STATUSES = [
 const PAYMENT_LABELS: Record<string, string> = { kaspi_red: "Kaspi", cash: "Наличные" };
 const DELIVERY_LABELS: Record<string, string> = { delivery: "Доставка", pickup: "Самовывоз" };
 
-type Tab = "dashboard" | "products" | "orders";
+type Tab = "dashboard" | "products" | "orders" | "loyalty";
 
 const emptyForm = () => ({
   name: "", brand: "", category: "cream" as const,
@@ -148,6 +148,7 @@ export default function Admin() {
             { id: "dashboard" as Tab, label: "Обзор", icon: LayoutDashboard },
             { id: "products" as Tab, label: "Товары", icon: Package },
             { id: "orders" as Tab, label: "Заказы", icon: ClipboardList },
+            { id: "loyalty" as Tab, label: "Лояльность", icon: Heart },
           ].map(({ id, label, icon: Icon }) => (
             <button
               key={id}
@@ -165,6 +166,7 @@ export default function Admin() {
         {tab === "dashboard" && <DashboardTab />}
         {tab === "products" && <ProductsTab />}
         {tab === "orders" && <OrdersTab />}
+        {tab === "loyalty" && <LoyaltyTab />}
       </div>
     </div>
   );
@@ -700,6 +702,170 @@ function OrdersTab() {
           })}
         </div>
       )}
+    </div>
+  );
+}
+
+// ── Loyalty Management ─────────────────────────────────────────────────────
+function LoyaltyTab() {
+  const [searchPhone, setSearchPhone] = useState("");
+  const [editingPhone, setEditingPhone] = useState<string | null>(null);
+  const [editingDiscount, setEditingDiscount] = useState("");
+
+  const { data: customers, isLoading, refetch } = trpc.loyalty.admin.getAllCustomers.useQuery(undefined, {
+    enabled: true,
+  });
+
+  const updateDiscountMutation = trpc.loyalty.admin.updateCustomerDiscount.useMutation({
+    onSuccess: () => {
+      toast.success("Скидка обновлена");
+      setEditingPhone(null);
+      refetch();
+    },
+    onError: (e) => toast.error(e.message),
+  });
+
+  const deleteCustomerMutation = trpc.loyalty.admin.deleteCustomer.useMutation({
+    onSuccess: () => {
+      toast.success("Клиент удалён");
+      refetch();
+    },
+    onError: (e) => toast.error(e.message),
+  });
+
+  const filteredCustomers = customers?.filter((c) =>
+    c.phone.toLowerCase().includes(searchPhone.toLowerCase())
+  ) || [];
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-white border border-[#e8e0d8] p-6">
+        <h2 className="text-lg font-serif font-light text-[#1a1a1a] mb-4">Управление клиентами лояльности</h2>
+
+        <div className="mb-6">
+          <input
+            type="text"
+            placeholder="Поиск по номеру телефона..."
+            value={searchPhone}
+            onChange={(e) => setSearchPhone(e.target.value)}
+            className="w-full border border-[#ddd] px-4 py-2 text-sm focus:outline-none focus:border-[#c9a96e]"
+          />
+        </div>
+
+        {isLoading ? (
+          <div className="text-center py-8 text-[#888]">Загрузка...</div>
+        ) : filteredCustomers.length === 0 ? (
+          <div className="text-center py-8 text-[#888]">Клиентов не найдено</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-[#e8e0d8]">
+                  <th className="text-left py-3 px-4 font-medium text-[#888]">Номер телефона</th>
+                  <th className="text-left py-3 px-4 font-medium text-[#888]">Имя</th>
+                  <th className="text-left py-3 px-4 font-medium text-[#888]">Баланс бонусов</th>
+                  <th className="text-left py-3 px-4 font-medium text-[#888]">Скидка %</th>
+                  <th className="text-left py-3 px-4 font-medium text-[#888]">Действия</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredCustomers.map((customer) => (
+                  <tr key={customer.id} className="border-b border-[#e8e0d8] hover:bg-[#faf7f4]">
+                    <td className="py-3 px-4">{customer.phone}</td>
+                    <td className="py-3 px-4">{customer.name}</td>
+                    <td className="py-3 px-4">{customer.bonusBalance}</td>
+                    <td className="py-3 px-4">
+                      {editingPhone === customer.phone ? (
+                        <input
+                          type="number"
+                          value={editingDiscount}
+                          onChange={(e) => setEditingDiscount(e.target.value)}
+                          className="w-16 border border-[#ddd] px-2 py-1 text-sm focus:outline-none focus:border-[#c9a96e]"
+                          min="0"
+                          max="100"
+                        />
+                      ) : (
+                        `${customer.discountPercent}%`
+                      )}
+                    </td>
+                    <td className="py-3 px-4 space-x-2 flex">
+                      {editingPhone === customer.phone ? (
+                        <>
+                          <button
+                            onClick={() => {
+                              updateDiscountMutation.mutate({
+                                customerId: customer.id,
+                                discountPercent: parseFloat(editingDiscount),
+                              });
+                            }}
+                            disabled={updateDiscountMutation.isPending}
+                            className="text-green-600 hover:text-green-700 text-xs font-medium"
+                          >
+                            <Check className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => setEditingPhone(null)}
+                            className="text-gray-600 hover:text-gray-700 text-xs font-medium"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => {
+                              setEditingPhone(customer.phone);
+                              setEditingDiscount(customer.discountPercent.toString());
+                            }}
+                            className="text-[#c9a96e] hover:text-[#1a1a1a] text-xs font-medium"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => {
+                              if (confirm(`Удалить клиента ${customer.phone}?`)) {
+                                deleteCustomerMutation.mutate({ customerId: customer.id });
+                              }
+                            }}
+                            disabled={deleteCustomerMutation.isPending}
+                            className="text-red-600 hover:text-red-700 text-xs font-medium"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      <div className="bg-white border border-[#e8e0d8] p-6">
+        <h3 className="text-sm font-medium text-[#888] mb-4">Статистика</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <p className="text-xs text-[#888] mb-1">Всего клиентов</p>
+            <p className="text-2xl font-light text-[#1a1a1a]">{customers?.length || 0}</p>
+          </div>
+          <div>
+            <p className="text-xs text-[#888] mb-1">Средняя скидка</p>
+            <p className="text-2xl font-light text-[#1a1a1a]">
+              {customers && customers.length > 0
+                ? (customers.reduce((sum, c) => sum + parseFloat(c.discountPercent.toString()), 0) / customers.length).toFixed(1)
+                : 0}%
+            </p>
+          </div>
+          <div>
+            <p className="text-xs text-[#888] mb-1">Всего бонусов</p>
+            <p className="text-2xl font-light text-[#1a1a1a]">
+              {customers?.reduce((sum, c) => sum + c.bonusBalance, 0) || 0}
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

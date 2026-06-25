@@ -99,5 +99,5 @@
 - [x] Frontend: registration page (/register) with phone, name, birthDate
 - [x] Frontend: login page (/login) with phone input and error handling
 - [x] Frontend: personal account dashboard (/account) with profile, bonuses, discounts, history
-- [ ] Frontend: admin loyalty management panel (customer search, discount editing, transaction history)
+- [x] Frontend: admin loyalty management panel (customer search, discount editing, transaction history)
 - [x] Tests: loyalty system compilation and structure
