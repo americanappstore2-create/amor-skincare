@@ -101,3 +101,14 @@
 - [x] Frontend: personal account dashboard (/account) with profile, bonuses, discounts, history
 - [x] Frontend: admin loyalty management panel (customer search, discount editing, transaction history)
 - [x] Tests: loyalty system compilation and structure
+
+
+## Loyalty Integration with Checkout (Round 9)
+- [ ] Add "КАБИНЕТ" tab to navbar navigation
+- [ ] Create Account modal with login/registration tabs
+- [ ] Integrate loyalty check in cart/checkout flow
+- [ ] Display customer discount % in cart
+- [ ] Show bonus preview in checkout (pending formula)
+- [ ] Update WhatsApp order message with loyalty info (discount, bonus preview)
+- [ ] Add "Use Bonuses" option in checkout (pending max % rule)
+- [ ] Test loyalty flow end-to-end

@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { ShoppingCart, Menu, X } from "lucide-react";
+import { ShoppingCart, Menu, X, User } from "lucide-react";
 import { useCart } from "../contexts/CartContext";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import LoginModal from "./LoginModal";
+import RegisterModal from "./RegisterModal";
 
 const LOGO_URL = "/logo.jpg";
 
@@ -30,6 +34,8 @@ export default function Navbar() {
   }, [totalItems, prevCartCount]);
 
   const isTransparent = isHome && !scrolled;
+
+  const [accountOpen, setAccountOpen] = useState(false);
 
   const navLinks = [
     { href: "/", label: "Главная" },
@@ -103,6 +109,41 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
+            
+            {/* Account Tab */}
+            <Dialog open={accountOpen} onOpenChange={setAccountOpen}>
+              <DialogTrigger asChild>
+                <button
+                  className="relative text-[10px] tracking-[0.25em] uppercase font-medium transition-all duration-200 flex items-center gap-1.5"
+                  style={{
+                    color: isTransparent
+                      ? "rgba(255,255,255,0.75)"
+                      : "#1a1a1a",
+                    transition: "color 0.4s ease",
+                  }}
+                >
+                  <User className="w-4 h-4" />
+                  Кабинет
+                </button>
+              </DialogTrigger>
+              <DialogContent className="max-w-md bg-white dark:bg-slate-950 border border-gray-200 dark:border-slate-800 shadow-2xl">
+                <DialogHeader className="border-b border-gray-200 dark:border-slate-800 pb-4">
+                  <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">Личный кабинет</DialogTitle>
+                </DialogHeader>
+                <Tabs defaultValue="login" className="w-full">
+                  <TabsList className="grid w-full grid-cols-2 bg-gray-100 dark:bg-slate-900 p-1 rounded-lg mb-6">
+                    <TabsTrigger value="login" className="font-semibold">Вход</TabsTrigger>
+                    <TabsTrigger value="register" className="font-semibold">Регистрация</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="login" className="mt-6">
+                    <LoginModal onSuccess={() => setAccountOpen(false)} />
+                  </TabsContent>
+                  <TabsContent value="register" className="mt-6">
+                    <RegisterModal onSuccess={() => setAccountOpen(false)} />
+                  </TabsContent>
+                </Tabs>
+              </DialogContent>
+            </Dialog>
           </div>
 
           {/* Right side */}

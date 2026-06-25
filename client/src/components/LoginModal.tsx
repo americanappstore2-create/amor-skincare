@@ -1,17 +1,14 @@
 import { useState } from "react";
-import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 
-interface LoginProps {
+interface LoginModalProps {
   onSuccess?: () => void;
 }
 
-export default function Login({ onSuccess }: LoginProps & any) {
-  const [, navigate] = useLocation();
+export default function LoginModal({ onSuccess }: LoginModalProps) {
   const [phone, setPhone] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -32,8 +29,6 @@ export default function Login({ onSuccess }: LoginProps & any) {
         toast.success("Добро пожаловать!");
         if (onSuccess) {
           onSuccess();
-        } else {
-          navigate(`/account?phone=${phone}`);
         }
       }
     } catch (error: any) {
@@ -49,7 +44,7 @@ export default function Login({ onSuccess }: LoginProps & any) {
     <div className="space-y-4">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
             Номер телефона
           </label>
           <Input
@@ -59,13 +54,16 @@ export default function Login({ onSuccess }: LoginProps & any) {
             onChange={(e) => setPhone(e.target.value)}
             required
             minLength={10}
+            className="bg-white dark:bg-slate-900 border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
           />
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-            <p className="text-sm font-medium">{error}</p>
-            <p className="text-xs mt-2">Не зарегистрированы? Перейдите на регистрацию.</p>
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-300 dark:border-red-700 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg">
+            <p className="text-sm font-semibold">{error}</p>
+            <p className="text-xs mt-2 text-red-600 dark:text-red-300">
+              Не зарегистрированы? Перейдите на регистрацию.
+            </p>
           </div>
         )}
 

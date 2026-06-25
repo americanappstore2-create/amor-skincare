@@ -6,7 +6,11 @@ import { Card } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 
-export default function Register() {
+interface RegisterProps {
+  onSuccess?: () => void;
+}
+
+export default function Register({ onSuccess }: RegisterProps & any) {
   const [, navigate] = useLocation();
   const [formData, setFormData] = useState({
     phone: "",
@@ -35,7 +39,11 @@ export default function Register() {
       });
 
       toast.success("Регистрация успешна!");
-      navigate(`/account?phone=${formData.phone}`);
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        navigate(`/account?phone=${formData.phone}`);
+      }
     } catch (error: any) {
       toast.error(error.message || "Ошибка при регистрации");
     } finally {
