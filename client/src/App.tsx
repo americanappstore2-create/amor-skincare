@@ -12,6 +12,9 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import Admin from "./pages/Admin";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import Account from "./pages/Account";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import AIChatWidget from "./components/AIChatWidget";
@@ -26,6 +29,9 @@ function Router() {
       <Route path="/checkout" component={Checkout} />
       <Route path="/order-confirmation" component={OrderConfirmation} />
       <Route path="/admin" component={Admin} />
+      <Route path="/register" component={Register} />
+      <Route path="/login" component={Login} />
+      <Route path="/account" component={Account} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

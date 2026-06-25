@@ -87,3 +87,17 @@
 ## Hide Manus Branding (Round 7)
 - [x] Add CSS to hide "Made with Manus" badge and related elements
 - [x] Make badge tiny and almost invisible (2px, 5% opacity)
+
+## Loyalty System (Round 8)
+- [x] Database: create loyalty_customers table (phone, name, birthDate, bonusBalance, discountPercent)
+- [x] Database: create loyalty_transactions table (customerId, type, amount, description, date)
+- [x] Backend: customer registration procedure (phone, name, birthDate optional)
+- [x] Backend: customer login procedure (phone verification)
+- [x] Backend: get customer profile procedure
+- [x] Backend: get customer transaction history procedure
+- [x] Backend: admin procedures for loyalty (add/edit/delete customer, manage discounts)
+- [x] Frontend: registration page (/register) with phone, name, birthDate
+- [x] Frontend: login page (/login) with phone input and error handling
+- [x] Frontend: personal account dashboard (/account) with profile, bonuses, discounts, history
+- [ ] Frontend: admin loyalty management panel (customer search, discount editing, transaction history)
+- [x] Tests: loyalty system compilation and structure
