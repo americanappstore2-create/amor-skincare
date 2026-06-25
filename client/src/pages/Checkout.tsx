@@ -4,10 +4,6 @@ import { ArrowRight, Truck, Store, CreditCard, Banknote, Check } from "lucide-re
 import { trpc } from "@/lib/trpc";
 import { useCart } from "../contexts/CartContext";
 import { toast } from "sonner";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import LoginModal from "@/components/LoginModal";
-import RegisterModal from "@/components/RegisterModal";
 
 const PICKUP_LOCATIONS = [
   { value: "uralsk_atrium", label: "Уральск — ТРЦ Атриум" },
@@ -53,10 +49,6 @@ export default function Checkout() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [focusedField, setFocusedField] = useState<string | null>(null);
-  const [accountOpen, setAccountOpen] = useState(false);
-  const [loyaltyCustomer, setLoyaltyCustomer] = useState<any>(null);
-  const [discountAmount, setDiscountAmount] = useState(0);
-  const [bonusPreview, setBonusPreview] = useState(0);
 
   const createOrder = trpc.orders.create.useMutation({
     onSuccess: (data) => {

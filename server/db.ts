@@ -1,6 +1,6 @@
 import { eq, desc, like, or } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, products, orders, InsertProduct, InsertOrder, loyaltyCustomers, loyaltyTransactions, InsertLoyaltyCustomer, InsertLoyaltyTransaction, LoyaltyCustomer } from "../drizzle/schema";
+import { InsertUser, users, products, orders, InsertProduct, InsertOrder } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -123,50 +123,4 @@ export async function deleteOrder(id: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.delete(orders).where(eq(orders.id, id));
-}
-
-// ---- Loyalty Customers ----
-export async function getLoyaltyCustomerByPhone(phone: string) {
-  const db = await getDb();
-  if (!db) return undefined;
-  const result = await db.select().from(loyaltyCustomers).where(eq(loyaltyCustomers.phone, phone)).limit(1);
-  return result.length > 0 ? result[0] : undefined;
-}
-
-export async function createLoyaltyCustomer(data: InsertLoyaltyCustomer) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  await db.insert(loyaltyCustomers).values(data);
-  return getLoyaltyCustomerByPhone(data.phone);
-}
-
-export async function updateLoyaltyCustomer(id: number, data: Partial<InsertLoyaltyCustomer>) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  await db.update(loyaltyCustomers).set(data).where(eq(loyaltyCustomers.id, id));
-}
-
-export async function deleteLoyaltyCustomer(id: number) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  await db.delete(loyaltyCustomers).where(eq(loyaltyCustomers.id, id));
-}
-
-export async function getAllLoyaltyCustomers() {
-  const db = await getDb();
-  if (!db) return [];
-  return db.select().from(loyaltyCustomers).orderBy(desc(loyaltyCustomers.createdAt));
-}
-
-// ---- Loyalty Transactions ----
-export async function createLoyaltyTransaction(data: InsertLoyaltyTransaction) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  await db.insert(loyaltyTransactions).values(data);
-}
-
-export async function getLoyaltyTransactionsByCustomerId(customerId: number) {
-  const db = await getDb();
-  if (!db) return [];
-  return db.select().from(loyaltyTransactions).where(eq(loyaltyTransactions.customerId, customerId)).orderBy(desc(loyaltyTransactions.createdAt));
 }

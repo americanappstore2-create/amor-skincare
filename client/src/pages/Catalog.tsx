@@ -7,7 +7,7 @@ import ProductCard from "../components/ProductCard";
 const CATEGORIES = [
   { value: "all",       label: "Все",          emoji: "✨" },
   { value: "serum",     label: "Сыворотки",    emoji: "💧" },
-  { value: "cream",     label: "Крема",        emoji: "🫙" },
+  { value: "cream",     label: "Кремы",        emoji: "🫙" },
   { value: "toner",     label: "Тонеры",       emoji: "🌊" },
   { value: "mask",      label: "Маски",        emoji: "🌿" },
   { value: "cleanser",  label: "Очищение",     emoji: "✨" },

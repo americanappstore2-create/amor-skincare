@@ -19,13 +19,6 @@ import {
   getOrderById,
   updateOrderStatus,
   deleteOrder,
-  getLoyaltyCustomerByPhone,
-  createLoyaltyCustomer,
-  updateLoyaltyCustomer,
-  deleteLoyaltyCustomer,
-  getAllLoyaltyCustomers,
-  createLoyaltyTransaction,
-  getLoyaltyTransactionsByCustomerId,
 } from "./db";
 
 const MANAGER_WHATSAPP = "77774779779";
@@ -325,90 +318,6 @@ export const appRouter = router({
           : "Извините, не могу ответить прямо сейчас. Напишите нам в WhatsApp: +7 777 477 97 79";
         return { content };
       }),
-  }),
-
-  loyalty: router({
-    register: publicProcedure
-      .input(z.object({
-        phone: z.string().min(10),
-        name: z.string().min(2),
-        birthDate: z.date().optional(),
-      }))
-      .mutation(async ({ input }) => {
-        const existing = await getLoyaltyCustomerByPhone(input.phone);
-        if (existing) {
-          throw new TRPCError({ code: "CONFLICT", message: "Этот номер уже зарегистрирован" });
-        }
-        const customer = await createLoyaltyCustomer({
-          phone: input.phone,
-          name: input.name,
-          birthDate: input.birthDate,
-          bonusBalance: 0,
-          discountPercent: "0",
-        });
-        return customer;
-      }),
-
-    login: publicProcedure
-      .input(z.object({ phone: z.string().min(10) }))
-      .query(async ({ input }) => {
-        const customer = await getLoyaltyCustomerByPhone(input.phone);
-        if (!customer) {
-          throw new TRPCError({ code: "NOT_FOUND", message: "Клиент не найден. Пожалуйста, зарегистрируйтесь." });
-        }
-        return customer;
-      }),
-
-    getProfile: publicProcedure
-      .input(z.object({ phone: z.string().min(10) }))
-      .query(async ({ input }) => {
-        const customer = await getLoyaltyCustomerByPhone(input.phone);
-        if (!customer) {
-          throw new TRPCError({ code: "NOT_FOUND", message: "Клиент не найден" });
-        }
-        const transactions = await getLoyaltyTransactionsByCustomerId(customer.id);
-        return { customer, transactions };
-      }),
-
-    admin: router({
-      getAllCustomers: adminProcedure.query(async () => {
-        return getAllLoyaltyCustomers();
-      }),
-
-      updateCustomerDiscount: adminProcedure
-        .input(z.object({
-          customerId: z.number(),
-          discountPercent: z.number().min(0).max(100),
-        }))
-        .mutation(async ({ input }) => {
-          await updateLoyaltyCustomer(input.customerId, { discountPercent: input.discountPercent.toString() });
-          return { success: true };
-        }),
-
-      deleteCustomer: adminProcedure
-        .input(z.object({ customerId: z.number() }))
-        .mutation(async ({ input }) => {
-          await deleteLoyaltyCustomer(input.customerId);
-          return { success: true };
-        }),
-
-      addTransaction: adminProcedure
-        .input(z.object({
-          customerId: z.number(),
-          type: z.enum(["bonus_earned", "bonus_spent", "discount_applied", "manual_adjustment"]),
-          amount: z.number(),
-          description: z.string().optional(),
-        }))
-        .mutation(async ({ input }) => {
-          await createLoyaltyTransaction({
-            customerId: input.customerId,
-            type: input.type,
-            amount: input.amount,
-            description: input.description,
-          });
-          return { success: true };
-        }),
-    }),
   }),
 });
 
