@@ -87,3 +87,13 @@
 ## Hide Manus Branding (Round 7)
 - [x] Add CSS to hide "Made with Manus" badge and related elements
 - [x] Make badge tiny and almost invisible (2px, 5% opacity)
+
+## Product Catalog Enhancement (Round 8)
+- [ ] Generate AI product images for all 1425 products in unified premium style
+- [ ] Research and correct all brand names to proper formatting
+- [ ] Update database with corrected brand names
+- [ ] Update database with new AI-generated image URLs
+- [ ] Remove descriptions from ProductCard component (keep only name and image)
+- [ ] Verify all changes display correctly on catalog page
+- [ ] Add smart search with autocomplete functionality
+- [ ] Add recommendations block (similar products and frequently bought together)
