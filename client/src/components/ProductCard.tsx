@@ -132,9 +132,14 @@ export default function ProductCard({ product }: ProductCardProps) {
           <p className="text-[9px] tracking-[0.2em] uppercase font-medium mb-1" style={{ color: "#c9a96e" }}>
             {product.brand}
           </p>
-          <h3 className="font-serif font-light text-[#1a1a1a] leading-snug mb-2.5 flex-1 line-clamp-2 group-hover:text-[#c9a96e] transition-colors duration-200" style={{ fontSize: "0.9rem" }}>
+          <h3 className="font-serif font-light text-[#1a1a1a] leading-snug mb-2 flex-1 line-clamp-2 group-hover:text-[#c9a96e] transition-colors duration-200" style={{ fontSize: "0.9rem" }}>
             {product.name}
           </h3>
+          {product.description && (
+            <p className="text-[11px] text-[#888] leading-snug mb-2.5 line-clamp-2" style={{ fontFamily: "serif", fontWeight: 300 }}>
+              {product.description}
+            </p>
+          )}
           <div className="flex items-center justify-between mt-auto">
             <span className="text-[13px] font-medium text-[#1a1a1a] tracking-wide">
               {parseFloat(product.price).toLocaleString("ru-KZ")} ₸
