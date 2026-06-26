@@ -1,0 +1,2 @@
+ALTER TABLE `loyalty_customers` MODIFY COLUMN `discountPercent` decimal(5,2) NOT NULL DEFAULT '0';--> statement-breakpoint
+ALTER TABLE `products` MODIFY COLUMN `category` enum('serum','cream','toner','mask','cleanser','eye_care','sunscreen','shampoo','conditioner','oil','blush','lip_products','pencil','deodorant','tools','sets','fluid','powder','other') NOT NULL;

@@ -22,6 +22,20 @@
       "when": 1780145685641,
       "tag": "0002_slim_matthew_murdock",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1782383198040,
+      "tag": "0003_aromatic_squadron_sinister",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1782471427264,
+      "tag": "0004_ambiguous_the_hunter",
+      "breakpoints": true
     }
   ]
 }
